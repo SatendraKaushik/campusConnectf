@@ -10,8 +10,13 @@ import { Mail, MapPin, Phone } from "lucide-react"
 export default function ContactPage() {
   return (
     <div className="min-h-screen bg-white">
-      <header className="bg-gradient-to-r from-blue-600 to-indigo-700 text-white">
-        <div className="container mx-auto py-12 px-4">
+      <header className="relative text-white">
+        <div 
+          className="absolute inset-0 bg-cover bg-center z-0" 
+          style={{ backgroundImage: 'url("https://www.abesit.in/wp-content/uploads/2023/07/desktop-banner-abesit.webp")' }}
+        ></div>
+        <div className="absolute inset-0 bg-black bg-opacity-50 z-10"></div>
+        <div className="container mx-auto py-12 px-4 relative z-20">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <div className="bg-white rounded-full p-2">
@@ -411,4 +416,3 @@ export default function ContactPage() {
     </div>
   )
 }
-

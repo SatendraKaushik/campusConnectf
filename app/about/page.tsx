@@ -72,8 +72,13 @@ export default function AboutPage() {
 
   return (
     <div className="min-h-screen bg-white">
-      <header className="bg-gradient-to-r from-blue-600 to-indigo-700 text-white">
-        <div className="container mx-auto py-12 px-4">
+      <header className="relative text-white">
+        <div 
+          className="absolute inset-0 bg-cover bg-center z-0" 
+          style={{ backgroundImage: 'url("https://www.abesit.in/wp-content/uploads/2023/07/desktop-banner-abesit.webp")' }}
+        ></div>
+        <div className="absolute inset-0 bg-black bg-opacity-50 z-10"></div>
+        <div className="container mx-auto py-12 px-4 relative z-20">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <div className="bg-white rounded-full p-2">
@@ -214,7 +219,7 @@ export default function AboutPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
             <div className="relative h-[400px] rounded-xl overflow-hidden shadow-xl">
               <Image
-                src="/placeholder.svg?height=400&width=600"
+                src="https://www.abesit.in/wp-content/uploads/2023/07/desktop-banner-abesit.webp"
                 alt="Campus Connect Platform"
                 fill
                 className="object-cover"
@@ -367,4 +372,3 @@ export default function AboutPage() {
     </div>
   )
 }
-
