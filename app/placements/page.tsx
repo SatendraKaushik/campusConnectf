@@ -1,3 +1,5 @@
+"use client"
+
 import DashboardLayout from "@/components/dashboard-layout"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
@@ -451,4 +453,3 @@ export default function PlacementsPage() {
     </DashboardLayout>
   )
 }
-
