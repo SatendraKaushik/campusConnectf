@@ -117,49 +117,49 @@ export default function DashboardLayout({ children, userType }: DashboardLayoutP
   if (!mounted) return null
 
   return (
-    <div className="flex h-screen bg-gray-50">
-      {/* Desktop Sidebar */}
-      <aside className="hidden md:flex md:w-64 flex-col bg-white border-r border-gray-200">
-        <div className="p-4 border-b border-gray-200 flex items-center gap-2">
-          <div className="bg-primary rounded-full p-1.5">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className="text-primary-foreground"
-            >
-              <path d="M22 10v6M2 10l10-5 10 5-10 5z"></path>
-              <path d="M6 12v5c3 3 9 3 12 0v-5"></path>
-            </svg>
-          </div>
-          <h1 className="text-xl font-bold text-primary">Campus Connect</h1>
+    <div className="flex min-h-screen overflow-hidden">
+    {/* Desktop Sidebar */}
+    <aside className="hidden md:flex md:flex-col md:w-64 border-r border-gray-200 bg-white">
+      <div className="p-4 border-b border-gray-200 flex items-center gap-2">
+        <div className="bg-primary rounded-full p-1.5">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="text-primary-foreground"
+          >
+            <path d="M22 10v6M2 10l10-5 10 5-10 5z"></path>
+            <path d="M6 12v5c3 3 9 3 12 0v-5"></path>
+          </svg>
         </div>
-        <nav className="flex-1 overflow-y-auto p-4">
-          <ul className="space-y-1">
-            {navItems.map((item) => {
-              const isActive = pathname === item.href
-              return (
-                <li key={item.href}>
-                  <Link
-                    href={item.href}
-                    className={`flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-                      isActive ? "bg-primary text-primary-foreground" : "text-gray-700 hover:bg-gray-100"
-                    }`}
-                  >
-                    <item.icon size={18} />
-                    {item.title}
-                  </Link>
-                </li>
-              )
-            })}
-          </ul>
-        </nav>
+        <h1 className="text-xl font-bold text-primary">Campus Connect</h1>
+      </div>
+      <nav className="flex-1 overflow-y-auto p-4">
+        <ul className="space-y-1">
+          {navItems.map((item) => {
+            const isActive = pathname === item.href
+            return (
+              <li key={item.href}>
+                <Link
+                  href={item.href}
+                  className={`flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                    isActive ? "bg-primary text-primary-foreground" : "text-gray-700 hover:bg-gray-100"
+                  }`}
+                >
+                  <item.icon size={18} />
+                  {item.title}
+                </Link>
+              </li>
+            )
+          })}
+        </ul>
+      </nav>
         <div className="p-4 border-t border-gray-200">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -294,7 +294,7 @@ export default function DashboardLayout({ children, userType }: DashboardLayoutP
       </Sheet>
 
       {/* Main Content */}
-      <div className="flex flex-col flex-1 overflow-hidden">
+      <div className="flex flex-col flex-1 min-h-screen">
         <header className="bg-white border-b border-gray-200 h-16 flex items-center px-4 md:px-6">
           <Button variant="ghost" size="icon" className="md:hidden mr-2" onClick={toggle}>
             <Menu size={20} />

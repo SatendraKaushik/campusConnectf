@@ -271,7 +271,11 @@ export default function StudentRecordsPage() {
                     </TableHeader>
                     <TableBody>
                       {filteredStudents.map((student) => (
-                        <TableRow key={student.id}>
+                        <TableRow 
+                          key={student.id} 
+                          className="cursor-pointer hover:bg-muted/50"
+                          onClick={() => window.location.href = `/admin/student-records/${student.id}`}
+                        >
                           <TableCell>
                             <div className="flex items-center gap-3">
                               <Avatar className="h-8 w-8">
