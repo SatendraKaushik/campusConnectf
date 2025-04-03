@@ -25,22 +25,22 @@ export default function AboutPage() {
       title: "Research Excellence",
       description:
         "Over 5000+ research papers published in international journals and conferences in the last 5 years.",
-      icon: "/placeholder.svg?height=60&width=60",
+      icon: "https://static.vecteezy.com/system/resources/previews/009/398/577/original/man-avatar-clipart-illustration-free-png.png",
     },
     {
       title: "Industry Partnerships",
       description: "Collaborations with 100+ leading companies for research, internships, and placements.",
-      icon: "/placeholder.svg?height=60&width=60",
+      icon: "https://static.vecteezy.com/system/resources/previews/009/398/577/original/man-avatar-clipart-illustration-free-png.png",
     },
     {
       title: "Placements",
       description: "95% placement rate with top companies like Google, Microsoft, Amazon, and more.",
-      icon: "/placeholder.svg?height=60&width=60",
+      icon: "https://static.vecteezy.com/system/resources/previews/009/398/577/original/man-avatar-clipart-illustration-free-png.png",
     },
     {
       title: "Innovation Hub",
       description: "Incubation center supporting 50+ startups founded by students and alumni.",
-      icon: "/placeholder.svg?height=60&width=60",
+      icon: "https://static.vecteezy.com/system/resources/previews/009/398/577/original/man-avatar-clipart-illustration-free-png.png",
     },
   ]
 
