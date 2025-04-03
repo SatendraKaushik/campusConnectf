@@ -30,9 +30,9 @@ export default function StudentDashboard() {
   }
 
   const recommendedSeniors = [
-    { id: 1, name: "Emma Wilson", role: "Software Engineer at Google", avatar: "/placeholder.svg?height=40&width=40" },
-    { id: 2, name: "James Rodriguez", role: "Data Scientist at Amazon", avatar: "/placeholder.svg?height=40&width=40" },
-    { id: 3, name: "Sophia Chen", role: "Product Manager at Microsoft", avatar: "/placeholder.svg?height=40&width=40" },
+    { id: 1, name: "Emma Wilson", role: "Software Engineer at Google", avatar: "https://png.pngtree.com/png-clipart/20230102/original/pngtree-business-man-avatar-png-image_8855195.png" },
+    { id: 2, name: "James Rodriguez", role: "Data Scientist at Amazon", avatar: "https://png.pngtree.com/png-clipart/20230102/original/pngtree-business-man-avatar-png-image_8855195.png" },
+    { id: 3, name: "Sophia Chen", role: "Product Manager at Microsoft", avatar: "https://png.pngtree.com/png-clipart/20230102/original/pngtree-business-man-avatar-png-image_8855195.png" },
   ]
 
   return (

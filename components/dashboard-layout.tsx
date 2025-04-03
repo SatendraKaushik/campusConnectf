@@ -95,19 +95,19 @@ export default function DashboardLayout({ children, userType }: DashboardLayoutP
     student: {
       name: "Alex Johnson",
       email: "alex.johnson@example.com",
-      avatar: "/placeholder.svg?height=40&width=40",
+      avatar: "https://png.pngtree.com/png-clipart/20230102/original/pngtree-business-man-avatar-png-image_8855195.png",
       role: "Student",
     },
     admin: {
       name: "Admin User",
       email: "admin@example.com",
-      avatar: "/placeholder.svg?height=40&width=40",
+      avatar: "https://png.pngtree.com/png-clipart/20230102/original/pngtree-business-man-avatar-png-image_8855195.png",
       role: "Administrator",
     },
     senior: {
       name: "Sarah Miller",
       email: "sarah.miller@example.com",
-      avatar: "/placeholder.svg?height=40&width=40",
+      avatar: "https://png.pngtree.com/png-clipart/20230102/original/pngtree-business-man-avatar-png-image_8855195.png",
       role: "Senior Student",
     }
   }
