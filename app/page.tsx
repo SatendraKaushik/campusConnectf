@@ -37,6 +37,7 @@ export default function Home() {
           <Button variant="ghost" asChild>
             <Link href="/contact">Contact</Link>
           </Button>
+      
           <Button asChild>
             <Link href="/login">Login</Link>
           </Button>

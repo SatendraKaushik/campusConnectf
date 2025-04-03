@@ -25,9 +25,6 @@ export default function LoginPage() {
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault()
-
-    // In a real app, you would validate credentials here
-    // For demo purposes, we'll just redirect based on user type
     if (userType === "student") {
       router.push("/student/dashboard")
     } else if (userType === "admin") {

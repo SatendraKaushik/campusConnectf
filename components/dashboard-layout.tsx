@@ -10,6 +10,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import {
   BarChart3,
   BookOpen,
+  Briefcase,
   Calendar,
   ChevronDown,
   Home,
@@ -60,6 +61,7 @@ export default function DashboardLayout({ children, userType }: DashboardLayoutP
     { title: "Performance", href: "/student/performance", icon: BarChart3 },
     { title: "Seniors", href: "/student/seniors", icon: Users },
     { title: "Posts", href: "/student/posts", icon: FileText },
+    { title: "Jobs", href: "/student/jobs", icon: Briefcase },
     { title: "Mentor Sessions", href: "/student/mentor-sessions", icon: Calendar },
     { title: "Leaderboard", href: "/student/leaderboard", icon: Trophy },
     { title: "Messages", href: "/student/messages", icon: MessageSquare },
@@ -71,6 +73,7 @@ export default function DashboardLayout({ children, userType }: DashboardLayoutP
     { title: "Dashboard", href: "/admin/dashboard", icon: Home },
     { title: "Student Records", href: "/admin/student-records", icon: Users },
     { title: "Analytics", href: "/admin/analytics", icon: BarChart3 },
+    { title: "Jobs", href: "/admin/jobs", icon: Briefcase },
     { title: "Posts", href: "/admin/posts", icon: FileText },
     { title: "Mentor Sessions", href: "/admin/mentor-sessions", icon: Calendar },
     { title: "Messages", href: "/admin/messages", icon: MessageSquare },
