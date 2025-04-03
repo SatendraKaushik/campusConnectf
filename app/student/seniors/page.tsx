@@ -19,7 +19,7 @@ export default function SeniorsPage() {
       branch: "Computer Science",
       batch: "2020",
       skills: ["React", "Node.js", "Python"],
-      avatar: "/placeholder.svg?height=100&width=100",
+      avatar: "https://static.vecteezy.com/system/resources/previews/009/398/577/original/man-avatar-clipart-illustration-free-png.png",
       isConnected: false,
     },
     {
@@ -29,7 +29,7 @@ export default function SeniorsPage() {
       branch: "Computer Science",
       batch: "2019",
       skills: ["Machine Learning", "Python", "SQL"],
-      avatar: "/placeholder.svg?height=100&width=100",
+      avatar: "https://static.vecteezy.com/system/resources/previews/009/398/577/original/man-avatar-clipart-illustration-free-png.png",
       isConnected: true,
     },
     {
@@ -39,7 +39,7 @@ export default function SeniorsPage() {
       branch: "Information Technology",
       batch: "2020",
       skills: ["Product Management", "UX Design", "Agile"],
-      avatar: "/placeholder.svg?height=100&width=100",
+      avatar: "https://static.vecteezy.com/system/resources/previews/009/398/577/original/man-avatar-clipart-illustration-free-png.png",
       isConnected: false,
     },
     {
@@ -49,7 +49,7 @@ export default function SeniorsPage() {
       branch: "Computer Science",
       batch: "2019",
       skills: ["React", "TypeScript", "CSS"],
-      avatar: "/placeholder.svg?height=100&width=100",
+      avatar: "https://static.vecteezy.com/system/resources/previews/009/398/577/original/man-avatar-clipart-illustration-free-png.png",
       isConnected: true,
     },
     {
@@ -59,7 +59,7 @@ export default function SeniorsPage() {
       branch: "Information Technology",
       batch: "2018",
       skills: ["Java", "Spring Boot", "Microservices"],
-      avatar: "/placeholder.svg?height=100&width=100",
+      avatar: "https://static.vecteezy.com/system/resources/previews/009/398/577/original/man-avatar-clipart-illustration-free-png.png",
       isConnected: false,
     },
     {
@@ -69,7 +69,7 @@ export default function SeniorsPage() {
       branch: "Electronics",
       batch: "2019",
       skills: ["TensorFlow", "PyTorch", "Computer Vision"],
-      avatar: "/placeholder.svg?height=100&width=100",
+      avatar: "https://static.vecteezy.com/system/resources/previews/009/398/577/original/man-avatar-clipart-illustration-free-png.png",
       isConnected: false,
     },
     {
@@ -79,7 +79,7 @@ export default function SeniorsPage() {
       branch: "Design",
       batch: "2020",
       skills: ["Figma", "Adobe XD", "Sketch"],
-      avatar: "/placeholder.svg?height=100&width=100",
+      avatar: "https://static.vecteezy.com/system/resources/previews/009/398/577/original/man-avatar-clipart-illustration-free-png.png",
       isConnected: true,
     },
     {
@@ -89,7 +89,7 @@ export default function SeniorsPage() {
       branch: "Computer Science",
       batch: "2018",
       skills: ["Docker", "Kubernetes", "AWS"],
-      avatar: "/placeholder.svg?height=100&width=100",
+      avatar: "https://static.vecteezy.com/system/resources/previews/009/398/577/original/man-avatar-clipart-illustration-free-png.png",
       isConnected: false,
     },
   ]
@@ -98,13 +98,13 @@ export default function SeniorsPage() {
 
   return (
     <DashboardLayout userType="student">
-      <div className="space-y-6">
-        <div>
+      <div className="container mx-auto px-4 py-6 max-w-full">
+        <div className="mb-6">
           <h1 className="text-2xl font-bold tracking-tight">Connect with Seniors</h1>
           <p className="text-muted-foreground">Find and connect with seniors who can guide you in your career.</p>
         </div>
 
-        <Tabs defaultValue="all">
+        <Tabs defaultValue="all" className="w-full">
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-4">
             <TabsList>
               <TabsTrigger value="all">All Seniors</TabsTrigger>
@@ -130,7 +130,7 @@ export default function SeniorsPage() {
             </div>
           </div>
 
-          <TabsContent value="all">
+          <TabsContent value="all" className="w-full">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               {seniors.map((senior) => (
                 <Card key={senior.id} className="overflow-hidden">
@@ -180,7 +180,7 @@ export default function SeniorsPage() {
             </div>
           </TabsContent>
 
-          <TabsContent value="connections">
+          <TabsContent value="connections" className="w-full">
             {connections.length > 0 ? (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 {connections.map((senior) => (
@@ -249,4 +249,3 @@ export default function SeniorsPage() {
     </DashboardLayout>
   )
 }
-

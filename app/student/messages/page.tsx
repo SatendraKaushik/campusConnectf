@@ -17,53 +17,14 @@ export default function MessagesPage() {
     {
       id: 1,
       name: "Emma Wilson",
-      avatar: "/placeholder.svg?height=40&width=40",
+      avatar: "https://png.pngtree.com/png-clipart/20230927/original/pngtree-man-avatar-image-for-profile-png-image_13001877.png",
       role: "Senior",
       lastMessage: "Thanks for reaching out!",
       time: "2 min ago",
       unread: 2,
       online: true,
     },
-    {
-      id: 2,
-      name: "Prof. Smith",
-      avatar: "/placeholder.svg?height=40&width=40",
-      role: "Faculty",
-      lastMessage: "Let me know if you have any questions about the assignment.",
-      time: "1 hour ago",
-      unread: 0,
-      online: false,
-    },
-    {
-      id: 3,
-      name: "James Rodriguez",
-      avatar: "/placeholder.svg?height=40&width=40",
-      role: "Senior",
-      lastMessage: "I'll send you the resources for the ML project.",
-      time: "Yesterday",
-      unread: 0,
-      online: true,
-    },
-    {
-      id: 4,
-      name: "Michael Brown",
-      avatar: "/placeholder.svg?height=40&width=40",
-      role: "Senior",
-      lastMessage: "Let's catch up tomorrow after class.",
-      time: "2 days ago",
-      unread: 0,
-      online: false,
-    },
-    {
-      id: 5,
-      name: "Sophia Chen",
-      avatar: "/placeholder.svg?height=40&width=40",
-      role: "Senior",
-      lastMessage: "Here's the link to the study group.",
-      time: "3 days ago",
-      unread: 0,
-      online: true,
-    },
+    // ... existing code ...
   ]
 
   const messages = [
@@ -74,88 +35,7 @@ export default function MessagesPage() {
       time: "10:30 AM",
       isUser: false,
     },
-    {
-      id: 2,
-      sender: "You",
-      content: "Hey Emma! I'm doing well, thanks for asking. How about you?",
-      time: "10:32 AM",
-      isUser: true,
-    },
-    {
-      id: 3,
-      sender: "Emma Wilson",
-      content: "I'm good too! I saw that you're working on a web development project. How's it going?",
-      time: "10:35 AM",
-      isUser: false,
-    },
-    {
-      id: 4,
-      sender: "You",
-      content:
-        "It's going well! I'm using React and Next.js for the frontend. But I'm having some issues with the API integration.",
-      time: "10:38 AM",
-      isUser: true,
-    },
-    {
-      id: 5,
-      sender: "Emma Wilson",
-      content:
-        "I've worked with those technologies before. Maybe I can help you out. What specific issues are you facing?",
-      time: "10:40 AM",
-      isUser: false,
-    },
-    {
-      id: 6,
-      sender: "You",
-      content:
-        "That would be great! I'm struggling with handling authentication tokens and making secure API calls. Do you have any experience with that?",
-      time: "10:42 AM",
-      isUser: true,
-    },
-    {
-      id: 7,
-      sender: "Emma Wilson",
-      content:
-        "Yes, I've implemented authentication flows using JWT before. I can share some code examples and resources that might help you.",
-      time: "10:45 AM",
-      isUser: false,
-    },
-    {
-      id: 8,
-      sender: "Emma Wilson",
-      content:
-        "Are you free for a quick call tomorrow? I think it would be easier to explain some concepts over a call rather than text.",
-      time: "10:46 AM",
-      isUser: false,
-    },
-    {
-      id: 9,
-      sender: "You",
-      content: "That sounds perfect! I'm free tomorrow after 3 PM. Would that work for you?",
-      time: "10:48 AM",
-      isUser: true,
-    },
-    {
-      id: 10,
-      sender: "Emma Wilson",
-      content: "3:30 PM works for me. I'll send you a meeting link tomorrow.",
-      time: "10:50 AM",
-      isUser: false,
-    },
-    {
-      id: 11,
-      sender: "You",
-      content: "Great! Looking forward to it. Thanks for your help, Emma!",
-      time: "10:52 AM",
-      isUser: true,
-    },
-    {
-      id: 12,
-      sender: "Emma Wilson",
-      content: "No problem at all! Happy to help. See you tomorrow!",
-      time: "10:55 AM",
-      isUser: false,
-    },
+    // ... existing code ...
   ]
 
   const [selectedContact, setSelectedContact] = useState(contacts[0])
@@ -182,7 +62,7 @@ export default function MessagesPage() {
                 <Input type="search" placeholder="Search messages..." className="pl-8" />
               </div>
             </div>
-            <ScrollArea className="h-[calc(100vh-12rem)]">
+            <div className="h-[calc(100vh-12rem)] overflow-y-auto">
               <div className="divide-y">
                 {contacts.map((contact) => (
                   <div
@@ -216,7 +96,7 @@ export default function MessagesPage() {
                   </div>
                 ))}
               </div>
-            </ScrollArea>
+            </div>
           </div>
 
           {/* Chat Area */}
@@ -253,7 +133,7 @@ export default function MessagesPage() {
             </div>
 
             {/* Messages */}
-            <ScrollArea className="flex-1 p-4">
+            <div className="flex-1 p-4 overflow-y-auto">
               <div className="space-y-4">
                 <div className="text-center">
                   <Badge variant="outline" className="text-xs">
@@ -283,7 +163,7 @@ export default function MessagesPage() {
                   </div>
                 ))}
               </div>
-            </ScrollArea>
+            </div>
 
             {/* Message Input */}
             <div className="p-4 border-t">
@@ -307,4 +187,3 @@ export default function MessagesPage() {
     </DashboardLayout>
   )
 }
-

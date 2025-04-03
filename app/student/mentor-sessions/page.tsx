@@ -15,7 +15,7 @@ export default function MentorSessionsPage() {
       title: "Data Structures and Algorithms Workshop",
       mentor: {
         name: "Prof. Smith",
-        avatar: "/placeholder.svg?height=40&width=40",
+        avatar: "https://static.vecteezy.com/system/resources/previews/011/459/664/original/people-avatar-icon-png.png",
         role: "Faculty",
       },
       date: "May 15, 2024",
@@ -32,7 +32,7 @@ export default function MentorSessionsPage() {
       title: "Career Guidance Session",
       mentor: {
         name: "Emma Wilson",
-        avatar: "/placeholder.svg?height=40&width=40",
+        avatar: "https://static.vecteezy.com/system/resources/previews/028/169/662/non_2x/3d-icons-occupation-job-avatar-for-social-media-profile-pictures-free-png.png",
         role: "Alumni",
       },
       date: "May 18, 2024",
@@ -49,7 +49,7 @@ export default function MentorSessionsPage() {
       title: "Web Development Masterclass",
       mentor: {
         name: "Michael Brown",
-        avatar: "/placeholder.svg?height=40&width=40",
+        avatar: "https://static.vecteezy.com/system/resources/previews/028/169/662/non_2x/3d-icons-occupation-job-avatar-for-social-media-profile-pictures-free-png.png",
         role: "Senior",
       },
       date: "May 20, 2024",
@@ -65,7 +65,7 @@ export default function MentorSessionsPage() {
       title: "Machine Learning Fundamentals",
       mentor: {
         name: "Dr. Johnson",
-        avatar: "/placeholder.svg?height=40&width=40",
+        avatar: "https://static.vecteezy.com/system/resources/previews/011/459/664/original/people-avatar-icon-png.png",
         role: "Faculty",
       },
       date: "May 25, 2024",
@@ -85,7 +85,7 @@ export default function MentorSessionsPage() {
       title: "System Design Interview Preparation",
       mentor: {
         name: "James Rodriguez",
-        avatar: "/placeholder.svg?height=40&width=40",
+        avatar: "https://static.vecteezy.com/system/resources/previews/011/459/664/original/people-avatar-icon-png.png",
         role: "Alumni",
       },
       date: "May 5, 2024",
@@ -101,7 +101,7 @@ export default function MentorSessionsPage() {
       title: "Introduction to DevOps",
       mentor: {
         name: "Ethan Davis",
-        avatar: "/placeholder.svg?height=40&width=40",
+        avatar: "https://static.vecteezy.com/system/resources/previews/028/169/662/non_2x/3d-icons-occupation-job-avatar-for-social-media-profile-pictures-free-png.png",
         role: "Alumni",
       },
       date: "April 28, 2024",
@@ -175,7 +175,7 @@ export default function MentorSessionsPage() {
                   </div>
                 </CardContent>
                 <CardFooter className="flex justify-between border-t pt-4">
-                  {session.isRegistered ? <Badge variant="success">Registered</Badge> : <Button>Register Now</Button>}
+                  {session.isRegistered ? <Badge >Registered</Badge> : <Button>Register Now</Button>}
                   {session.meetingLink && (
                     <Button variant="outline" asChild>
                       <Link href={session.meetingLink} target="_blank">

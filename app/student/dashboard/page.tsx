@@ -37,8 +37,8 @@ export default function StudentDashboard() {
 
   return (
     <DashboardLayout userType="student">
-      <div className="space-y-6">
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+      <div className="container mx-auto px-4 py-6 max-w-full">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
           <div>
             <h1 className="text-2xl font-bold tracking-tight">Student Dashboard</h1>
             <p className="text-muted-foreground">Welcome back, Alex! Here's what's happening with your account.</p>
@@ -141,7 +141,7 @@ export default function StudentDashboard() {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div className="md:col-span-2">
-            <Tabs defaultValue="activities">
+            <Tabs defaultValue="activities" className="w-full">
               <TabsList className="grid w-full grid-cols-2">
                 <TabsTrigger value="activities">Recent Activities</TabsTrigger>
                 <TabsTrigger value="posts">Latest Posts</TabsTrigger>
@@ -274,4 +274,3 @@ export default function StudentDashboard() {
     </DashboardLayout>
   )
 }
-

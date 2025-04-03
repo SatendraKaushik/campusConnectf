@@ -15,7 +15,7 @@ export default function PostsPage() {
       id: 1,
       author: {
         name: "Career Cell",
-        avatar: "/placeholder.svg?height=40&width=40",
+        avatar: "https://static.vecteezy.com/system/resources/previews/028/169/662/non_2x/3d-icons-occupation-job-avatar-for-social-media-profile-pictures-free-png.png",
         role: "Official",
       },
       title: "Summer Internship Opportunities",
@@ -31,7 +31,7 @@ export default function PostsPage() {
       id: 2,
       author: {
         name: "Tech Club",
-        avatar: "/placeholder.svg?height=40&width=40",
+        avatar: "https://static.vecteezy.com/system/resources/previews/028/169/662/non_2x/3d-icons-occupation-job-avatar-for-social-media-profile-pictures-free-png.png",
         role: "Club",
       },
       title: "Annual Hackathon Announcement",
@@ -47,7 +47,7 @@ export default function PostsPage() {
       id: 3,
       author: {
         name: "Prof. Johnson",
-        avatar: "/placeholder.svg?height=40&width=40",
+        avatar: "https://static.vecteezy.com/system/resources/previews/028/169/662/non_2x/3d-icons-occupation-job-avatar-for-social-media-profile-pictures-free-png.png",
         role: "Faculty",
       },
       title: "Special Lecture on AI and Machine Learning",
@@ -63,7 +63,7 @@ export default function PostsPage() {
       id: 4,
       author: {
         name: "Placement Cell",
-        avatar: "/placeholder.svg?height=40&width=40",
+        avatar: "https://static.vecteezy.com/system/resources/previews/028/169/662/non_2x/3d-icons-occupation-job-avatar-for-social-media-profile-pictures-free-png.png",
         role: "Official",
       },
       title: "Mock Interview Sessions",
@@ -79,7 +79,7 @@ export default function PostsPage() {
       id: 5,
       author: {
         name: "Cultural Committee",
-        avatar: "/placeholder.svg?height=40&width=40",
+        avatar: "https://static.vecteezy.com/system/resources/previews/028/169/662/non_2x/3d-icons-occupation-job-avatar-for-social-media-profile-pictures-free-png.png",
         role: "Club",
       },
       title: "Annual Cultural Fest Dates Announced",

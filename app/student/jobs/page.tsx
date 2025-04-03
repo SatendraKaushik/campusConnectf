@@ -48,7 +48,7 @@ export default function JobsPage() {
             salary: "₹25,000 - ₹35,000/month",
             posted: "2 days ago",
             deadline: "May 30, 2023",
-            logo: "/placeholder.svg?height=40&width=40",
+            logo: "https://static.vecteezy.com/system/resources/previews/028/169/662/non_2x/3d-icons-occupation-job-avatar-for-social-media-profile-pictures-free-png.png",
             skills: ["JavaScript", "React", "HTML", "CSS", "TypeScript"],
             description: "We are looking for a passionate Frontend Developer Intern to join our team. You will be working on real-world projects and gain hands-on experience with modern web technologies.",
             requirements: [
@@ -69,7 +69,7 @@ export default function JobsPage() {
             salary: "₹8,00,000 - ₹12,00,000/year",
             posted: "1 week ago",
             deadline: "June 15, 2023",
-            logo: "/placeholder.svg?height=40&width=40",
+            logo: "https://static.vecteezy.com/system/resources/previews/028/169/662/non_2x/3d-icons-occupation-job-avatar-for-social-media-profile-pictures-free-png.png",
             skills: ["Node.js", "Express", "MongoDB", "REST API", "JavaScript"],
             description: "We are seeking a skilled Backend Developer to design and implement server-side applications. You will be responsible for developing and maintaining the core functionality of our products.",
             requirements: [
@@ -90,7 +90,7 @@ export default function JobsPage() {
             salary: "₹12,00,000 - ₹18,00,000/year",
             posted: "3 days ago",
             deadline: "June 10, 2023",
-            logo: "/placeholder.svg?height=40&width=40",
+            logo: "https://static.vecteezy.com/system/resources/previews/028/169/662/non_2x/3d-icons-occupation-job-avatar-for-social-media-profile-pictures-free-png.png",
             skills: ["Python", "TensorFlow", "PyTorch", "Machine Learning", "Deep Learning"],
             description: "Join our team of ML engineers working on cutting-edge AI solutions. You will be involved in developing and deploying machine learning models for various applications.",
             requirements: [
@@ -111,7 +111,7 @@ export default function JobsPage() {
             salary: "₹15,00,000 - ₹25,00,000/year",
             posted: "5 days ago",
             deadline: "June 20, 2023",
-            logo: "/placeholder.svg?height=40&width=40",
+            logo: "https://static.vecteezy.com/system/resources/previews/028/169/662/non_2x/3d-icons-occupation-job-avatar-for-social-media-profile-pictures-free-png.png",
             skills: ["Java", "Data Structures", "Algorithms", "System Design", "AWS"],
             description: "Amazon is looking for Software Development Engineers to join our team. You will be responsible for designing, developing, and maintaining scalable software solutions.",
             requirements: [
@@ -136,7 +136,7 @@ export default function JobsPage() {
             salary: "₹6,00,000 - ₹9,00,000/year",
             posted: "1 week ago",
             deadline: "June 5, 2023",
-            logo: "/placeholder.svg?height=40&width=40",
+            logo: "https://static.vecteezy.com/system/resources/previews/028/169/662/non_2x/3d-icons-occupation-job-avatar-for-social-media-profile-pictures-free-png.png",
             skills: ["SQL", "Excel", "Python", "Data Visualization", "Statistics"],
             description: "We are looking for a Data Analyst to interpret data and turn it into information which can offer ways to improve our business.",
             requirements: [
@@ -156,7 +156,7 @@ export default function JobsPage() {
             salary: "₹10,00,000 - ₹15,00,000/year",
             posted: "2 weeks ago",
             deadline: "May 25, 2023",
-            logo: "/placeholder.svg?height=40&width=40",
+            logo: "https://static.vecteezy.com/system/resources/previews/028/169/662/non_2x/3d-icons-occupation-job-avatar-for-social-media-profile-pictures-free-png.png",
             skills: ["Docker", "Kubernetes", "AWS", "CI/CD", "Linux"],
             description: "We are seeking a DevOps Engineer to help build and maintain our cloud infrastructure and deployment pipelines.",
             requirements: [

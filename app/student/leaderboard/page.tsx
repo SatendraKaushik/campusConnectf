@@ -12,7 +12,7 @@ export default function LeaderboardPage() {
     {
       id: 1,
       name: "Alex Johnson",
-      avatar: "/placeholder.svg?height=40&width=40",
+      avatar: "https://cdn3d.iconscout.com/3d/premium/thumb/graduate-student-avatar-10107492-8179543.png",
       branch: "Computer Science",
       batch: "2022",
       score: 1250,
@@ -22,7 +22,7 @@ export default function LeaderboardPage() {
     {
       id: 2,
       name: "Emma Wilson",
-      avatar: "/placeholder.svg?height=40&width=40",
+      avatar: "https://cdn3d.iconscout.com/3d/premium/thumb/graduate-student-avatar-10107492-8179543.png",
       branch: "Computer Science",
       batch: "2021",
       score: 1180,
@@ -32,7 +32,7 @@ export default function LeaderboardPage() {
     {
       id: 3,
       name: "Michael Brown",
-      avatar: "/placeholder.svg?height=40&width=40",
+      avatar: "https://cdn3d.iconscout.com/3d/premium/thumb/graduate-student-avatar-10107492-8179543.png",
       branch: "Information Technology",
       batch: "2022",
       score: 1120,
@@ -42,7 +42,7 @@ export default function LeaderboardPage() {
     {
       id: 4,
       name: "Sophia Chen",
-      avatar: "/placeholder.svg?height=40&width=40",
+      avatar: "https://cdn3d.iconscout.com/3d/premium/thumb/graduate-student-avatar-10107492-8179543.png",
       branch: "Computer Science",
       batch: "2021",
       score: 1050,
@@ -52,7 +52,7 @@ export default function LeaderboardPage() {
     {
       id: 5,
       name: "James Rodriguez",
-      avatar: "/placeholder.svg?height=40&width=40",
+      avatar: "https://cdn3d.iconscout.com/3d/premium/thumb/graduate-student-avatar-10107492-8179543.png",
       branch: "Electronics",
       batch: "2022",
       score: 980,
@@ -62,7 +62,7 @@ export default function LeaderboardPage() {
     {
       id: 6,
       name: "Olivia Martinez",
-      avatar: "/placeholder.svg?height=40&width=40",
+      avatar: "https://cdn3d.iconscout.com/3d/premium/thumb/graduate-student-avatar-10107492-8179543.png",
       branch: "Information Technology",
       batch: "2021",
       score: 950,
@@ -72,7 +72,7 @@ export default function LeaderboardPage() {
     {
       id: 7,
       name: "William Taylor",
-      avatar: "/placeholder.svg?height=40&width=40",
+      avatar: "https://cdn3d.iconscout.com/3d/premium/thumb/graduate-student-avatar-10107492-8179543.png",
       branch: "Computer Science",
       batch: "2022",
       score: 920,
@@ -82,7 +82,7 @@ export default function LeaderboardPage() {
     {
       id: 8,
       name: "Ava Johnson",
-      avatar: "/placeholder.svg?height=40&width=40",
+      avatar: "https://cdn3d.iconscout.com/3d/premium/thumb/graduate-student-avatar-10107492-8179543.png",
       branch: "Design",
       batch: "2021",
       score: 890,
@@ -92,7 +92,7 @@ export default function LeaderboardPage() {
     {
       id: 9,
       name: "Ethan Davis",
-      avatar: "/placeholder.svg?height=40&width=40",
+      avatar: "https://cdn3d.iconscout.com/3d/premium/thumb/graduate-student-avatar-10107492-8179543.png",
       branch: "Computer Science",
       batch: "2022",
       score: 860,
@@ -102,7 +102,7 @@ export default function LeaderboardPage() {
     {
       id: 10,
       name: "Isabella Garcia",
-      avatar: "/placeholder.svg?height=40&width=40",
+      avatar: "https://cdn3d.iconscout.com/3d/premium/thumb/graduate-student-avatar-10107492-8179543.png",
       branch: "Information Technology",
       batch: "2021",
       score: 830,
@@ -115,7 +115,7 @@ export default function LeaderboardPage() {
     {
       id: 1,
       name: "Michael Brown",
-      avatar: "/placeholder.svg?height=40&width=40",
+      avatar: "https://cdn3d.iconscout.com/3d/premium/thumb/graduate-student-avatar-10107492-8179543.png",
       branch: "Information Technology",
       batch: "2022",
       score: 980,
@@ -125,7 +125,7 @@ export default function LeaderboardPage() {
     {
       id: 2,
       name: "Emma Wilson",
-      avatar: "/placeholder.svg?height=40&width=40",
+      avatar: "https://cdn3d.iconscout.com/3d/premium/thumb/graduate-student-avatar-10107492-8179543.png",
       branch: "Computer Science",
       batch: "2021",
       score: 950,
@@ -135,7 +135,7 @@ export default function LeaderboardPage() {
     {
       id: 3,
       name: "Alex Johnson",
-      avatar: "/placeholder.svg?height=40&width=40",
+      avatar: "https://cdn3d.iconscout.com/3d/premium/thumb/graduate-student-avatar-10107492-8179543.png",
       branch: "Computer Science",
       batch: "2022",
       score: 920,
@@ -149,7 +149,7 @@ export default function LeaderboardPage() {
     {
       id: 1,
       name: "Emma Wilson",
-      avatar: "/placeholder.svg?height=40&width=40",
+      avatar: "https://cdn3d.iconscout.com/3d/premium/thumb/graduate-student-avatar-10107492-8179543.png",
       branch: "Computer Science",
       batch: "2021",
       score: 9.8,
@@ -159,7 +159,7 @@ export default function LeaderboardPage() {
     {
       id: 2,
       name: "Sophia Chen",
-      avatar: "/placeholder.svg?height=40&width=40",
+      avatar: "https://cdn3d.iconscout.com/3d/premium/thumb/graduate-student-avatar-10107492-8179543.png",
       branch: "Computer Science",
       batch: "2021",
       score: 9.7,
@@ -169,7 +169,7 @@ export default function LeaderboardPage() {
     {
       id: 3,
       name: "Alex Johnson",
-      avatar: "/placeholder.svg?height=40&width=40",
+      avatar: "https://cdn3d.iconscout.com/3d/premium/thumb/graduate-student-avatar-10107492-8179543.png",
       branch: "Computer Science",
       batch: "2022",
       score: 9.5,
@@ -261,7 +261,7 @@ export default function LeaderboardPage() {
                           <p className="text-sm text-muted-foreground">Points</p>
                         </div>
                         {student.isCurrentUser && (
-                          <Badge className="mt-2" variant="success">
+                          <Badge className="mt-2">
                             You
                           </Badge>
                         )}
