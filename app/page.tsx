@@ -43,101 +43,109 @@ export default function Home() {
         </div>
       </header>
 
-      <main className="container mx-auto px-4 py-12">
-        <div className="flex flex-col md:flex-row items-center gap-12">
-          <div className="flex-1 space-y-6">
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-900">
-              Connect, Collaborate, and Grow with Campus Connect
-            </h2>
-            <p className="text-xl text-gray-600">
-              A comprehensive platform designed to enhance student experience, facilitate mentorship, and streamline
-              academic management.
-            </p>
-            <div className="flex gap-4">
-              <Button size="lg" asChild>
-                <Link href="/login">Get Started</Link>
-              </Button>
-              <Button size="lg" variant="outline" asChild>
-                <Link href="/features">Learn More</Link>
-              </Button>
-            </div>
-          </div>
-          <div className="flex-1 relative h-[400px] w-full rounded-xl overflow-hidden shadow-xl">
+      <main>
+        {/* Hero section with background image */}
+        <div className="relative py-20 mb-12 z-0">
+          {/* Background image */}
+          <div className="absolute inset-0 z-0 ">
             <Image
               src="https://www.abesit.in/wp-content/uploads/2023/07/desktop-banner-abesit.webp"
-              alt="Campus Connect Dashboard Preview"
+              alt="Campus Background"
               fill
               className="object-cover"
             />
+            <div className="absolute inset-0 bg-black bg-opacity-60"></div>
+          </div>
+          
+          {/* Content */}
+          <div className="container mx-auto px-4 relative z-10">
+            <div className="max-w-2xl text-white">
+              <h2 className="text-4xl md:text-5xl font-bold mb-6">
+                Connect, Collaborate, and Grow with Campus Connect
+              </h2>
+              <p className="text-xl text-gray-200 mb-8">
+                A comprehensive platform designed to enhance student experience, facilitate mentorship, and streamline
+                academic management.
+              </p>
+              <div className="flex gap-4">
+                <Button size="lg" className="bg-white text-primary hover:bg-gray-100" asChild>
+                  <Link href="/login">Get Started</Link>
+                </Button>
+                <Button size="lg" variant="outline" className="bg-white text-primary hover:bg-gray-100 " asChild>
+                  <Link href="/features">Learn More</Link>
+                </Button>
+              </div>
+            </div>
           </div>
         </div>
 
-        <div className="mt-24 grid grid-cols-1 md:grid-cols-3 gap-8">
-          <Card>
-            <CardHeader>
-              <CardTitle>Student Performance</CardTitle>
-              <CardDescription>Track your coding progress across platforms</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="h-40 flex items-center justify-center bg-gray-100 rounded-md">
-                <img
-                  src="https://www.abesit.in/wp-content/uploads/2023/05/home-ban-3-scaled.jpg"
-                  alt="ABESIT Banner"
-                  className="h-full w-full object-cover rounded-md"
-                />
-              </div>
+        <div className="container mx-auto px-4">
+          <h2 className="text-3xl font-bold text-center mb-12">Our Features</h2>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <Card>
+              <CardHeader>
+                <CardTitle>Student Performance</CardTitle>
+                <CardDescription>Track your coding progress across platforms</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="h-40 flex items-center justify-center bg-gray-100 rounded-md">
+                  <img
+                    src="https://www.abesit.in/wp-content/uploads/2023/05/home-ban-3-scaled.jpg"
+                    alt="ABESIT Banner"
+                    className="h-full w-full object-cover rounded-md"
+                  />
+                </div>
+              </CardContent>
+              <CardFooter>
+                <Button variant="ghost" className="w-full" asChild>
+                  <Link href="/login">Learn More</Link>
+                </Button>
+              </CardFooter>
+            </Card>
 
-            </CardContent>
-            <CardFooter>
-              <Button variant="ghost" className="w-full" asChild>
-                <Link href="/login">Learn More</Link>
-              </Button>
-            </CardFooter>
-          </Card>
+            <Card>
+              <CardHeader>
+                <CardTitle>Connect with Seniors</CardTitle>
+                <CardDescription>Build valuable connections for guidance</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="h-40 flex items-center justify-center bg-gray-100 rounded-md">
+                  <img
+                    src="https://www.abesit.in/wp-content/uploads/2023/05/home-ban-1-scaled.jpg"
+                    alt="ABESIT Banner"
+                    className="h-full w-full object-cover rounded-md"
+                  />
+                </div>
+              </CardContent>
+              <CardFooter>
+                <Button variant="ghost" className="w-full" asChild>
+                  <Link href="/login">Learn More</Link>
+                </Button>
+              </CardFooter>
+            </Card>
 
-          <Card>
-            <CardHeader>
-              <CardTitle>Connect with Seniors</CardTitle>
-              <CardDescription>Build valuable connections for guidance</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="h-40 flex items-center justify-center bg-gray-100 rounded-md">
-                <img
-                  src="https://www.abesit.in/wp-content/uploads/2023/05/home-ban-1-scaled.jpg"
-                  alt="ABESIT Banner"
-                  className="h-full w-full object-cover rounded-md"
-                />
-              </div>
-
-            </CardContent>
-            <CardFooter>
-              <Button variant="ghost" className="w-full" asChild>
-                <Link href="/login">Learn More</Link>
-              </Button>
-            </CardFooter>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle>Mentor Sessions</CardTitle>
-              <CardDescription>Participate in expert-led learning sessions</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="h-40 flex items-center justify-center bg-gray-100 rounded-md">
-                <img
-                  src="https://www.abesit.in/wp-content/uploads/2023/05/abes_img.jpg"
-                  alt="ABESIT Banner"
-                  className="h-full w-full object-cover rounded-md"
-                />
-              </div>
-
-            </CardContent>
-            <CardFooter>
-              <Button variant="ghost" className="w-full" asChild>
-                <Link href="/login">Learn More</Link>
-              </Button>
-            </CardFooter>
-          </Card>
+            <Card>
+              <CardHeader>
+                <CardTitle>Mentor Sessions</CardTitle>
+                <CardDescription>Participate in expert-led learning sessions</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="h-40 flex items-center justify-center bg-gray-100 rounded-md">
+                  <img
+                    src="https://www.abesit.in/wp-content/uploads/2023/05/abes_img.jpg"
+                    alt="ABESIT Banner"
+                    className="h-full w-full object-cover rounded-md"
+                  />
+                </div>
+              </CardContent>
+              <CardFooter>
+                <Button variant="ghost" className="w-full" asChild>
+                  <Link href="/login">Learn More</Link>
+                </Button>
+              </CardFooter>
+            </Card>
+          </div>
         </div>
       </main>
 
@@ -249,4 +257,3 @@ export default function Home() {
     </div>
   )
 }
-

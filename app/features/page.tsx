@@ -86,7 +86,7 @@ export default function FeaturesPage() {
           </div>
           <div className="order-1 md:order-2 relative h-[300px] w-full rounded-xl overflow-hidden shadow-lg">
             <Image
-              src="/placeholder.svg?height=300&width=500"
+              src="http://blog.kinems.com/content/images/2018/04/Tracking_Headline-1.png"
               alt="Student Performance Dashboard"
               fill
               className="object-cover"
@@ -98,7 +98,7 @@ export default function FeaturesPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center mb-24">
           <div className="relative h-[300px] w-full rounded-xl overflow-hidden shadow-lg">
             <Image
-              src="/placeholder.svg?height=300&width=500"
+              src="https://barrazacarlos.com/wp-content/uploads/2023/08/reverse-mentoring-768x432.webp"
               alt="Mentorship Connection"
               fill
               className="object-cover"
@@ -168,7 +168,7 @@ export default function FeaturesPage() {
           </div>
           <div className="order-1 md:order-2 relative h-[300px] w-full rounded-xl overflow-hidden shadow-lg">
             <Image
-              src="/placeholder.svg?height=300&width=500"
+              src="https://mybites.io/wp-content/uploads/2021/12/training-new-employees.jpg"
               alt="Expert Learning Sessions"
               fill
               className="object-cover"
