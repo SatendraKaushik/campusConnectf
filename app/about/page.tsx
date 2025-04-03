@@ -137,7 +137,7 @@ export default function AboutPage() {
               </p>
             </div>
             <div className="relative h-[400px] rounded-xl overflow-hidden shadow-xl">
-              <Image src="/placeholder.svg?height=400&width=600" alt="College Campus" fill className="object-cover" />
+              <Image src="https://www.abesit.in/wp-content/uploads/2023/07/desktop-banner-abesit.webp" alt="College Campus" fill className="object-cover" />
             </div>
           </div>
         </section>

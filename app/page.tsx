@@ -64,7 +64,7 @@ export default function Home() {
           </div>
           <div className="flex-1 relative h-[400px] w-full rounded-xl overflow-hidden shadow-xl">
             <Image
-              src="/placeholder.svg?height=400&width=600"
+              src="https://www.abesit.in/wp-content/uploads/2023/07/desktop-banner-abesit.webp"
               alt="Campus Connect Dashboard Preview"
               fill
               className="object-cover"
@@ -80,22 +80,13 @@ export default function Home() {
             </CardHeader>
             <CardContent>
               <div className="h-40 flex items-center justify-center bg-gray-100 rounded-md">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="64"
-                  height="64"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="text-primary"
-                >
-                  <path d="m12 14 4-4"></path>
-                  <path d="M3.34 19a10 10 0 1 1 17.32 0"></path>
-                </svg>
+                <img
+                  src="https://www.abesit.in/wp-content/uploads/2023/05/home-ban-3-scaled.jpg"
+                  alt="ABESIT Banner"
+                  className="h-full w-full object-cover rounded-md"
+                />
               </div>
+
             </CardContent>
             <CardFooter>
               <Button variant="ghost" className="w-full" asChild>
@@ -111,24 +102,13 @@ export default function Home() {
             </CardHeader>
             <CardContent>
               <div className="h-40 flex items-center justify-center bg-gray-100 rounded-md">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="64"
-                  height="64"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="text-primary"
-                >
-                  <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
-                  <circle cx="9" cy="7" r="4"></circle>
-                  <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
-                  <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-                </svg>
+                <img
+                  src="https://www.abesit.in/wp-content/uploads/2023/05/home-ban-1-scaled.jpg"
+                  alt="ABESIT Banner"
+                  className="h-full w-full object-cover rounded-md"
+                />
               </div>
+
             </CardContent>
             <CardFooter>
               <Button variant="ghost" className="w-full" asChild>
@@ -144,30 +124,13 @@ export default function Home() {
             </CardHeader>
             <CardContent>
               <div className="h-40 flex items-center justify-center bg-gray-100 rounded-md">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="64"
-                  height="64"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="text-primary"
-                >
-                  <rect width="18" height="18" x="3" y="4" rx="2" ry="2"></rect>
-                  <line x1="16" x2="16" y1="2" y2="6"></line>
-                  <line x1="8" x2="8" y1="2" y2="6"></line>
-                  <line x1="3" x2="21" y1="10" y2="10"></line>
-                  <path d="M8 14h.01"></path>
-                  <path d="M12 14h.01"></path>
-                  <path d="M16 14h.01"></path>
-                  <path d="M8 18h.01"></path>
-                  <path d="M12 18h.01"></path>
-                  <path d="M16 18h.01"></path>
-                </svg>
+                <img
+                  src="https://www.abesit.in/wp-content/uploads/2023/05/abes_img.jpg"
+                  alt="ABESIT Banner"
+                  className="h-full w-full object-cover rounded-md"
+                />
               </div>
+
             </CardContent>
             <CardFooter>
               <Button variant="ghost" className="w-full" asChild>
