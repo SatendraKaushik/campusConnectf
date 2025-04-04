@@ -1,8 +1,6 @@
 "use client"
-
 import type React from "react"
-
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -12,18 +10,175 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
+import Axios from "@/utils/Axios"
+import { useToast } from "@/components/ui/use-toast"
+import { Eye, EyeOff } from "lucide-react"
+
+// Set fixed default years to ensure server/client consistency
+const DEFAULT_CURRENT_YEAR = 2025
+const DEFAULT_PAST_YEARS = [2025, 2024, 2023, 2022, 2021, 2020, 2019, 2018, 2017, 2016]
+const DEFAULT_FUTURE_YEARS = [2025, 2026, 2027, 2028, 2029, 2030]
 
 export default function RegisterPage() {
   const router = useRouter()
+  const { toast } = useToast()
   const [userType, setUserType] = useState("student")
-  const currentYear = new Date().getFullYear()
-  const years = Array.from({ length: 10 }, (_, i) => currentYear - i)
-  const futureYears = Array.from({ length: 6 }, (_, i) => currentYear + i)
+  const [isLoading, setIsLoading] = useState(false)
+  const [showPassword, setShowPassword] = useState(false)
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
+  const [showFacultyPassword, setShowFacultyPassword] = useState(false)
+  const [showFacultyConfirmPassword, setShowFacultyConfirmPassword] = useState(false)
+  
+  // Use static default years for hydration consistency
+  const [years, setYears] = useState(DEFAULT_PAST_YEARS)
+  const [futureYears, setFutureYears] = useState(DEFAULT_FUTURE_YEARS)
+  
+  const [formData, setFormData] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+    branch: "cs",
+    joiningYear: DEFAULT_CURRENT_YEAR.toString(), // Use string for consistency
+    passingYear: (DEFAULT_CURRENT_YEAR + 4).toString(), // Use string for consistency
+    userType: "student",
+    collegeId: "",
+    rollNumber: "", 
+    facultyId: "",
+    name: "",
+    department: "cs",
+    position: "",
+    phone: "",
+    facultyEmail: "",
+    facultyPassword: "",
+    facultyConfirmPassword: ""
+  })
 
-  const handleRegister = (e: React.FormEvent) => {
+  // Update date-dependent values only after initial render
+  useEffect(() => {
+    // Safe to access browser APIs after component mounts
+    const actualCurrentYear = new Date().getFullYear()
+    
+    // Only update if different from our default
+    if (actualCurrentYear !== DEFAULT_CURRENT_YEAR) {
+      // Generate updated year arrays
+      const pastYears = Array.from({ length: 10 }, (_, i) => actualCurrentYear - i)
+      const nextYears = Array.from({ length: 6 }, (_, i) => actualCurrentYear + i)
+      
+      // Update state with new arrays
+      setYears(pastYears)
+      setFutureYears(nextYears)
+      
+      // Only update form defaults if they match the original defaults
+      if (formData.joiningYear === DEFAULT_CURRENT_YEAR.toString()) {
+        setFormData(prev => ({
+          ...prev,
+          joiningYear: actualCurrentYear.toString()
+        }))
+      }
+      
+      if (formData.passingYear === (DEFAULT_CURRENT_YEAR + 4).toString()) {
+        setFormData(prev => ({
+          ...prev,
+          passingYear: (actualCurrentYear + 4).toString()
+        }))
+      }
+    }
+  }, [])
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { id, value } = e.target
+    setFormData(prev => ({ ...prev, [id]: value }))
+  }
+
+  const handleSelectChange = (id: string, value: string) => {
+    setFormData(prev => ({ ...prev, [id]: value }))
+  }
+
+  const handleRadioChange = (value: string) => {
+    setFormData(prev => ({ ...prev, userType: value }))
+  }
+
+  const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault()
-    // In a real app, you would validate and submit the form data to your backend
-    router.push("/login")
+    setIsLoading(true)
+    
+    try {
+      if (userType === "admin") {
+        if (formData.facultyPassword !== formData.facultyConfirmPassword) {
+          toast({
+            title: "Passwords don't match",
+            description: "Please ensure both passwords match",
+            variant: "destructive"
+          })
+          setIsLoading(false)
+          return
+        }
+        
+        const response = await Axios.post('/auth/faculty-register', {
+          facultyId: formData.facultyId,
+          name: formData.name,
+          email: formData.facultyEmail,
+          password: formData.facultyPassword,
+          department: formData.department,
+          position: formData.position,
+          phone: formData.phone,
+          collegeId: formData.collegeId
+        })
+        
+        if (response.status === 201) {
+          toast({
+            title: "Registration successful",
+            description: "Your faculty account has been created. Please login.",
+          })
+          router.push("/login")
+        }
+      } else {
+        if (formData.password !== formData.confirmPassword) {
+          toast({
+            title: "Passwords don't match",
+            description: "Please ensure both passwords match",
+            variant: "destructive"
+          })
+          setIsLoading(false)
+          return
+        }
+        
+      
+      
+          const response = await Axios.post('/auth/student-register', {
+            firstName: formData.firstName,
+            lastName: formData.lastName,
+            email: formData.email,
+            collegeId: formData.collegeId,
+            password: formData.password,
+            branch: formData.branch,
+            joiningYear: formData.joiningYear,
+            passingYear: formData.passingYear,
+            userType: formData.userType,
+            rollNumber: formData.rollNumber
+          })
+          
+          if (response.status === 201) {
+            toast({
+              title: "Registration successful",
+              description: "Your student account has been created. Please login.",
+            })
+            router.push("/login")
+          }
+        
+      }
+    } catch (error: any) {
+      console.error("Registration error:", error)
+      toast({
+        title: "Registration failed",
+        description: error.response?.data?.error || "There was an error during registration. Please try again.",
+        variant: "destructive"
+      })
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   return (
@@ -61,7 +216,7 @@ export default function RegisterPage() {
             <Tabs defaultValue="student" onValueChange={setUserType}>
               <TabsList className="grid w-full grid-cols-2">
                 <TabsTrigger value="student">Student</TabsTrigger>
-                <TabsTrigger value="admin">College Admin</TabsTrigger>
+                <TabsTrigger value="admin">Faculty</TabsTrigger>
               </TabsList>
 
               {userType === "student" && (
@@ -69,33 +224,107 @@ export default function RegisterPage() {
                   <div className="space-y-4 mt-4">
                     <div className="grid grid-cols-2 gap-4">
                       <div className="space-y-2">
-                        <Label htmlFor="first-name">First Name</Label>
-                        <Input id="first-name" placeholder="John" required />
+                        <Label htmlFor="firstName">First Name</Label>
+                        <Input 
+                          id="firstName" 
+                          placeholder="John" 
+                          value={formData.firstName}
+                          onChange={handleChange}
+                          required 
+                        />
                       </div>
                       <div className="space-y-2">
-                        <Label htmlFor="last-name">Last Name</Label>
-                        <Input id="last-name" placeholder="Doe" required />
+                        <Label htmlFor="lastName">Last Name</Label>
+                        <Input 
+                          id="lastName" 
+                          placeholder="Doe" 
+                          value={formData.lastName}
+                          onChange={handleChange}
+                          required 
+                        />
                       </div>
                     </div>
 
                     <div className="space-y-2">
                       <Label htmlFor="email">Email</Label>
-                      <Input id="email" type="email" placeholder="john.doe@example.com" required />
+                      <Input 
+                        id="email" 
+                        type="email" 
+                        placeholder="john.doe@example.com" 
+                        value={formData.email}
+                        onChange={handleChange}
+                        required 
+                      />
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="collegeId">College ID</Label>
+                      <Input 
+                        id="collegeId" 
+                        placeholder="Enter your college's unique ID" 
+                        value={formData.collegeId}
+                        onChange={handleChange}
+                        required 
+                      />
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="rollNumber">Roll Number</Label>
+                      <Input 
+                        id="rollNumber" 
+                        placeholder="Enter your roll number" 
+                        value={formData.rollNumber}
+                        onChange={handleChange}
+                        required 
+                      />
                     </div>
 
                     <div className="space-y-2">
                       <Label htmlFor="password">Password</Label>
-                      <Input id="password" type="password" required />
+                      <div className="relative">
+                        <Input 
+                          id="password" 
+                          type={showPassword ? "text" : "password"}
+                          value={formData.password}
+                          onChange={handleChange}
+                          required 
+                        />
+                        <button
+                          type="button"
+                          className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500"
+                          onClick={() => setShowPassword(!showPassword)}
+                        >
+                          {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                        </button>
+                      </div>
                     </div>
 
                     <div className="space-y-2">
-                      <Label htmlFor="confirm-password">Confirm Password</Label>
-                      <Input id="confirm-password" type="password" required />
+                      <Label htmlFor="confirmPassword">Confirm Password</Label>
+                      <div className="relative">
+                        <Input 
+                          id="confirmPassword" 
+                          type={showConfirmPassword ? "text" : "password"}
+                          value={formData.confirmPassword}
+                          onChange={handleChange}
+                          required 
+                        />
+                        <button
+                          type="button"
+                          className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500"
+                          onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                        >
+                          {showConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                        </button>
+                      </div>
                     </div>
 
                     <div className="space-y-2">
                       <Label htmlFor="branch">Branch</Label>
-                      <Select defaultValue="cs">
+                      <Select 
+                        defaultValue={formData.branch}
+                        onValueChange={(value) => handleSelectChange("branch", value)}
+                      >
                         <SelectTrigger id="branch">
                           <SelectValue placeholder="Select branch" />
                         </SelectTrigger>
@@ -112,9 +341,12 @@ export default function RegisterPage() {
 
                     <div className="grid grid-cols-2 gap-4">
                       <div className="space-y-2">
-                        <Label htmlFor="joining-year">Joining Year</Label>
-                        <Select defaultValue={currentYear.toString()}>
-                          <SelectTrigger id="joining-year">
+                        <Label htmlFor="joiningYear">Joining Year</Label>
+                        <Select 
+                          value={formData.joiningYear}
+                          onValueChange={(value) => handleSelectChange("joiningYear", value)}
+                        >
+                          <SelectTrigger id="joiningYear">
                             <SelectValue placeholder="Select year" />
                           </SelectTrigger>
                           <SelectContent>
@@ -127,9 +359,12 @@ export default function RegisterPage() {
                         </Select>
                       </div>
                       <div className="space-y-2">
-                        <Label htmlFor="passing-year">Passing Year</Label>
-                        <Select defaultValue={(currentYear + 4).toString()}>
-                          <SelectTrigger id="passing-year">
+                        <Label htmlFor="passingYear">Passing Year</Label>
+                        <Select 
+                          value={formData.passingYear}
+                          onValueChange={(value) => handleSelectChange("passingYear", value)}
+                        >
+                          <SelectTrigger id="passingYear">
                             <SelectValue placeholder="Select year" />
                           </SelectTrigger>
                           <SelectContent>
@@ -145,7 +380,11 @@ export default function RegisterPage() {
 
                     <div className="space-y-2">
                       <Label>User Type</Label>
-                      <RadioGroup defaultValue="student" className="flex space-x-4">
+                      <RadioGroup 
+                        value={formData.userType} 
+                        className="flex space-x-4"
+                        onValueChange={handleRadioChange}
+                      >
                         <div className="flex items-center space-x-2">
                           <RadioGroupItem value="student" id="student-type" />
                           <Label htmlFor="student-type">Current Student</Label>
@@ -157,8 +396,8 @@ export default function RegisterPage() {
                       </RadioGroup>
                     </div>
 
-                    <Button type="submit" className="w-full">
-                      Create Student Account
+                    <Button type="submit" className="w-full" disabled={isLoading}>
+                      {isLoading ? "Creating Account..." : "Create Student Account"}
                     </Button>
                   </div>
                 </form>
@@ -168,52 +407,135 @@ export default function RegisterPage() {
                 <form onSubmit={handleRegister}>
                   <div className="space-y-4 mt-4">
                     <div className="space-y-2">
-                      <Label htmlFor="college-name">College Name</Label>
-                      <Input id="college-name" placeholder="Example University" required />
+                      <Label htmlFor="facultyId">Faculty ID</Label>
+                      <Input 
+                        id="facultyId" 
+                        placeholder="Enter your faculty ID" 
+                        value={formData.facultyId}
+                        onChange={handleChange}
+                        required 
+                      />
                     </div>
 
                     <div className="space-y-2">
-                      <Label htmlFor="admin-name">Admin Name</Label>
-                      <Input id="admin-name" placeholder="Admin Full Name" required />
+                      <Label htmlFor="name">Full Name</Label>
+                      <Input 
+                        id="name" 
+                        placeholder="Enter your full name" 
+                        value={formData.name}
+                        onChange={handleChange}
+                        required 
+                      />
                     </div>
 
                     <div className="space-y-2">
-                      <Label htmlFor="admin-position">Position</Label>
-                      <Input id="admin-position" placeholder="e.g. Dean, Registrar, IT Admin" required />
+                      <Label htmlFor="collegeId">College ID</Label>
+                      <Input 
+                        id="collegeId" 
+                        placeholder="Enter your college ID" 
+                        value={formData.collegeId}
+                        onChange={handleChange}
+                        required 
+                      />
                     </div>
 
                     <div className="space-y-2">
-                      <Label htmlFor="admin-email">Official Email</Label>
-                      <Input id="admin-email" type="email" placeholder="admin@college.edu" required />
+                      <Label htmlFor="position">Position</Label>
+                      <Input 
+                        id="position" 
+                        placeholder="e.g. Dean, Registrar, IT Admin" 
+                        value={formData.position}
+                        onChange={handleChange}
+                        required 
+                      />
                     </div>
 
                     <div className="space-y-2">
-                      <Label htmlFor="admin-phone">Contact Number</Label>
-                      <Input id="admin-phone" type="tel" placeholder="+1 (123) 456-7890" required />
+                      <Label htmlFor="department">Department</Label>
+                      <Select 
+                        defaultValue={formData.department}
+                        onValueChange={(value) => handleSelectChange("department", value)}
+                      >
+                        <SelectTrigger id="department">
+                          <SelectValue placeholder="Select department" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="cs">Computer Science</SelectItem>
+                          <SelectItem value="it">Information Technology</SelectItem>
+                          <SelectItem value="ec">Electronics & Communication</SelectItem>
+                          <SelectItem value="ee">Electrical Engineering</SelectItem>
+                          <SelectItem value="me">Mechanical Engineering</SelectItem>
+                          <SelectItem value="ce">Civil Engineering</SelectItem>
+                        </SelectContent>
+                      </Select>
                     </div>
 
                     <div className="space-y-2">
-                      <Label htmlFor="college-website">College Website</Label>
-                      <Input id="college-website" type="url" placeholder="https://www.college.edu" required />
+                      <Label htmlFor="facultyEmail">Email</Label>
+                      <Input 
+                        id="facultyEmail" 
+                        type="email" 
+                        placeholder="faculty@college.edu" 
+                        value={formData.facultyEmail}
+                        onChange={handleChange}
+                        required 
+                      />
                     </div>
 
                     <div className="space-y-2">
-                      <Label htmlFor="college-address">College Address</Label>
-                      <Input id="college-address" placeholder="123 Education St, City, State" required />
+                      <Label htmlFor="phone">Contact Number</Label>
+                      <Input 
+                        id="phone" 
+                        type="tel" 
+                        placeholder="+1 (123) 456-7890" 
+                        value={formData.phone}
+                        onChange={handleChange}
+                        required 
+                      />
                     </div>
 
                     <div className="space-y-2">
-                      <Label htmlFor="admin-password">Password</Label>
-                      <Input id="admin-password" type="password" required />
+                      <Label htmlFor="facultyPassword">Password</Label>
+                      <div className="relative">
+                        <Input 
+                          id="facultyPassword" 
+                          type={showFacultyPassword ? "text" : "password"}
+                          value={formData.facultyPassword}
+                          onChange={handleChange}
+                          required 
+                        />
+                        <button
+                          type="button"
+                          className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500"
+                          onClick={() => setShowFacultyPassword(!showFacultyPassword)}
+                        >
+                          {showFacultyPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                        </button>
+                      </div>
                     </div>
 
                     <div className="space-y-2">
-                      <Label htmlFor="admin-confirm-password">Confirm Password</Label>
-                      <Input id="admin-confirm-password" type="password" required />
+                      <Label htmlFor="facultyConfirmPassword">Confirm Password</Label>
+                      <div className="relative">
+                        <Input 
+                          id="facultyConfirmPassword" 
+                          type={showFacultyConfirmPassword ? "text" : "password"}
+                          value={formData.facultyConfirmPassword}
+                          onChange={handleChange}
+                          required 
+                        />
+                        <button
+                          type="button"
+                          className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500"
+                          onClick={() => setShowFacultyConfirmPassword(!showFacultyConfirmPassword)}
+                        >
+                          {showFacultyConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                        </button>
+                      </div>
                     </div>
 
-                    <Button type="submit" className="w-full">
-                      Create Admin Account
+                    <Button type="submit" className="w-full" disabled={isLoading}>
+                      {isLoading ? "Creating Account..." : "Create Faculty Account"}
                     </Button>
                   </div>
                 </form>
@@ -243,4 +565,3 @@ export default function RegisterPage() {
     </div>
   )
 }
-

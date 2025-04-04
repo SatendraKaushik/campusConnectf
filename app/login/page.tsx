@@ -10,26 +10,65 @@ import { Label } from "@/components/ui/label"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
-
+import Axios from "@/utils/Axios"
+import { toast } from "sonner"
 export default function LoginPage() {
   const router = useRouter()
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [userType, setUserType] = useState("student")
   const [isClient, setIsClient] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
   
   // Fix hydration error by ensuring client-side rendering
   useEffect(() => {
     setIsClient(true)
   }, [])
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e) => {
     e.preventDefault()
-    if (userType === "student") {
-      router.push("/student/dashboard")
-    } else if (userType === "admin") {
-      router.push("/admin/dashboard")
-    }  
+    setIsLoading(true)
+    
+    try {
+      let response;
+      
+      if (userType === "student") {
+        response = await Axios.post('/auth/student-login', {
+          email,
+          password
+        })
+        
+        if (response.data.statusCode === 200) {
+          toast.success(response.data.message || "Student logged in successfully")
+          // Store user info in localStorage or state management solution if needed
+          localStorage.setItem('user', JSON.stringify(response.data.data.student))
+          localStorage.setItem('accessToken', response.data.data.accessToken)
+          router.push("/student/dashboard")
+        }
+      } else if (userType === "admin") {
+        response = await Axios.post('/auth/faculty-login', {
+          email,
+          password
+        })
+        
+        if (response.data.statusCode === 200) {
+          toast.success(response.data.message || "Faculty logged in successfully")
+          // Store user info in localStorage or state management solution if needed
+          localStorage.setItem('user', JSON.stringify(response.data.data.faculty))
+          localStorage.setItem('accessToken', response.data.data.accessToken)
+          router.push("/admin/dashboard")
+        }
+      }
+    } catch (error) {
+      console.error("Login error:", error)
+      
+      // Handle different types of errors
+      const errorMessage = error.response?.data?.message || 
+                          "Login failed. Please check your credentials and try again."
+      toast.error(errorMessage)
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   // Only render the UI after client-side hydration is complete
@@ -72,7 +111,6 @@ export default function LoginPage() {
             <Tabs defaultValue="student" onValueChange={setUserType}>
               <TabsList className="grid w-full grid-cols-2">
                 <TabsTrigger value="student">Student</TabsTrigger>
-                
                 <TabsTrigger value="admin">Admin</TabsTrigger>
               </TabsList>
               <TabsContent value="student" className="mt-4">
@@ -87,6 +125,7 @@ export default function LoginPage() {
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         required
+                        disabled={isLoading}
                       />
                     </div>
                     <div className="space-y-2">
@@ -102,50 +141,15 @@ export default function LoginPage() {
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         required
+                        disabled={isLoading}
                       />
                     </div>
-                    <Button type="submit" className="w-full">
-                      Login as Student
+                    <Button type="submit" className="w-full" disabled={isLoading}>
+                      {isLoading ? "Logging in..." : "Login as Student"}
                     </Button>
                   </div>
                 </form>
               </TabsContent>
-
-              {/* <TabsContent value="senior" className="mt-4">
-                <form onSubmit={handleLogin}>
-                  <div className="space-y-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="senior-email">Email</Label>
-                      <Input
-                        id="senior-email"
-                        type="email"
-                        placeholder="senior@example.com"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        required
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <div className="flex items-center justify-between">
-                        <Label htmlFor="senior-password">Password</Label>
-                        <Link href="/forgot-password" className="text-sm text-primary hover:underline">
-                          Forgot password?
-                        </Link>
-                      </div>
-                      <Input
-                        id="senior-password"
-                        type="password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        required
-                      />
-                    </div>
-                    <Button type="submit" className="w-full">
-                      Login as Senior
-                    </Button>
-                  </div>
-                </form>
-              </TabsContent> */}
          
               <TabsContent value="admin" className="mt-4">
                 <form onSubmit={handleLogin}>
@@ -159,6 +163,7 @@ export default function LoginPage() {
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         required
+                        disabled={isLoading}
                       />
                     </div>
                     <div className="space-y-2">
@@ -174,10 +179,11 @@ export default function LoginPage() {
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         required
+                        disabled={isLoading}
                       />
                     </div>
-                    <Button type="submit" className="w-full">
-                      Login as Admin
+                    <Button type="submit" className="w-full" disabled={isLoading}>
+                      {isLoading ? "Logging in..." : "Login as Admin"}
                     </Button>
                   </div>
                 </form>
@@ -197,4 +203,3 @@ export default function LoginPage() {
     </div>
   )
 }
-
