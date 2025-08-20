@@ -1,22 +1,43 @@
 "use client"
 
+import { useState, useEffect } from "react"
 import DashboardLayout from "@/components/dashboard-layout"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { Code, ExternalLink, Filter, Search, Tag } from "lucide-react"
+import { Code, ExternalLink, Search, Tag, RefreshCw, TrendingUp, Loader2, Building, Clock } from "lucide-react"
 import { Input } from "@/components/ui/input"
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { chatSession } from "@/utils/GeminiAImodel"
+
+interface Question {
+  id: string
+  title: string
+  difficulty: string
+  tags: string[]
+  companies: string[]
+  url: string
+}
+
+interface TrendingQuestion extends Question {
+  question: string
+  answer: string
+}
 
 export default function CodingQuestionsPage() {
-  // Hardcoded data for demonstration
+  // State for search and filters
+  const [searchQuery, setSearchQuery] = useState<string>("")
+  const [difficultyFilter, setDifficultyFilter] = useState<string>("all")
+  const [companyFilter, setCompanyFilter] = useState<string>("all")
+
+  // State for trending questions
+  const [trendingQuestions, setTrendingQuestions] = useState<TrendingQuestion[]>([])
+  const [loadingTrending, setLoadingTrending] = useState<boolean>(false)
+  const [trendingError, setTrendingError] = useState<string | null>(null)
+  const [lastRefreshed, setLastRefreshed] = useState<Date>(new Date())
+
+  // Expanded list of questions for each platform
   const leetcodeQuestions = [
     {
       id: "lc-1",
@@ -58,7 +79,47 @@ export default function CodingQuestionsPage() {
       companies: ["Amazon", "Microsoft", "Facebook"],
       url: "https://leetcode.com/problems/longest-palindromic-substring/",
     },
-  ];
+    {
+      id: "lc-6",
+      title: "ZigZag Conversion",
+      difficulty: "Medium",
+      tags: ["String"],
+      companies: ["Amazon", "Facebook", "Adobe"],
+      url: "https://leetcode.com/problems/zigzag-conversion/",
+    },
+    {
+      id: "lc-7",
+      title: "Reverse Integer",
+      difficulty: "Medium",
+      tags: ["Math"],
+      companies: ["Apple", "Amazon", "Bloomberg"],
+      url: "https://leetcode.com/problems/reverse-integer/",
+    },
+    {
+      id: "lc-8",
+      title: "String to Integer (atoi)",
+      difficulty: "Medium",
+      tags: ["String", "Math"],
+      companies: ["Microsoft", "Amazon", "Facebook"],
+      url: "https://leetcode.com/problems/string-to-integer-atoi/",
+    },
+    {
+      id: "lc-9",
+      title: "Palindrome Number",
+      difficulty: "Easy",
+      tags: ["Math"],
+      companies: ["Amazon", "Adobe", "Apple"],
+      url: "https://leetcode.com/problems/palindrome-number/",
+    },
+    {
+      id: "lc-10",
+      title: "Regular Expression Matching",
+      difficulty: "Hard",
+      tags: ["String", "Dynamic Programming", "Recursion"],
+      companies: ["Google", "Facebook", "Uber"],
+      url: "https://leetcode.com/problems/regular-expression-matching/",
+    },
+  ]
 
   const codechefQuestions = [
     {
@@ -101,7 +162,47 @@ export default function CodingQuestionsPage() {
       companies: ["Amazon", "Microsoft"],
       url: "https://www.codechef.com/problems/MEET",
     },
-  ];
+    {
+      id: "cc-6",
+      title: "Worthy Matrix",
+      difficulty: "Hard",
+      tags: ["Math", "Prefix Sum", "Matrix"],
+      companies: ["Google", "Microsoft", "Amazon"],
+      url: "https://www.codechef.com/problems/MATXOR",
+    },
+    {
+      id: "cc-7",
+      title: "Binary String MEX",
+      difficulty: "Hard",
+      tags: ["Dynamic Programming", "Strings"],
+      companies: ["Facebook", "Google", "Amazon"],
+      url: "https://www.codechef.com/problems/MEXSTR",
+    },
+    {
+      id: "cc-8",
+      title: "Pair Me",
+      difficulty: "Easy",
+      tags: ["Math", "Implementation"],
+      companies: ["Amazon", "Microsoft"],
+      url: "https://www.codechef.com/problems/SUMPOS",
+    },
+    {
+      id: "cc-9",
+      title: "Even Sum",
+      difficulty: "Easy",
+      tags: ["Math", "Implementation"],
+      companies: ["Microsoft", "Amazon"],
+      url: "https://www.codechef.com/problems/EVENGAME",
+    },
+    {
+      id: "cc-10",
+      title: "Point Grid",
+      difficulty: "Medium",
+      tags: ["Greedy", "Implementation"],
+      companies: ["Google", "Amazon", "Microsoft"],
+      url: "https://www.codechef.com/problems/PRIGRID",
+    },
+  ]
 
   const gfgQuestions = [
     {
@@ -144,14 +245,145 @@ export default function CodingQuestionsPage() {
       companies: ["Amazon", "Microsoft", "Samsung"],
       url: "https://practice.geeksforgeeks.org/problems/detect-loop-in-linked-list/1",
     },
-  ];
+    {
+      id: "gfg-6",
+      title: "Reverse a Linked List",
+      difficulty: "Easy",
+      tags: ["Linked List"],
+      companies: ["Amazon", "Microsoft", "Facebook"],
+      url: "https://practice.geeksforgeeks.org/problems/reverse-a-linked-list/1",
+    },
+    {
+      id: "gfg-7",
+      title: "Rotate Array",
+      difficulty: "Easy",
+      tags: ["Array"],
+      companies: ["Amazon", "Google", "Microsoft"],
+      url: "https://practice.geeksforgeeks.org/problems/rotate-array-by-n-elements-1587115621/1",
+    },
+    {
+      id: "gfg-8",
+      title: "Sort an array of 0s, 1s and 2s",
+      difficulty: "Easy",
+      tags: ["Array", "Sorting"],
+      companies: ["Amazon", "Microsoft", "Adobe"],
+      url: "https://practice.geeksforgeeks.org/problems/sort-an-array-of-0s-1s-and-2s4231/1",
+    },
+    {
+      id: "gfg-9",
+      title: "Minimum Platforms",
+      difficulty: "Medium",
+      tags: ["Array", "Greedy"],
+      companies: ["Amazon", "Microsoft", "Google"],
+      url: "https://practice.geeksforgeeks.org/problems/minimum-platforms-1587115620/1",
+    },
+    {
+      id: "gfg-10",
+      title: "Trapping Rain Water",
+      difficulty: "Hard",
+      tags: ["Array", "Dynamic Programming"],
+      companies: ["Amazon", "Microsoft", "Google"],
+      url: "https://practice.geeksforgeeks.org/problems/trapping-rain-water-1587115621/1",
+    },
+  ]
+
+  // Fetch trending questions using Gemini API
+  useEffect(() => {
+    fetchTrendingQuestions()
+
+    // Set up auto-refresh every 30 minutes
+    const refreshInterval = setInterval(
+      () => {
+        fetchTrendingQuestions()
+      },
+      30 * 60 * 1000,
+    ) // 30 minutes
+
+    return () => clearInterval(refreshInterval)
+  }, [])
+
+  const fetchTrendingQuestions = async () => {
+    setLoadingTrending(true)
+    setTrendingError(null)
+
+    try {
+      const prompt = `Generate 10 trending coding interview questions that are currently being asked by top tech companies in 2024. 
+      These should be real, up-to-date questions with their answers.
+      
+      Format your response as a valid JSON array with the following structure for each question:
+      {
+        "id": "unique-id",
+        "title": "The question title",
+        "difficulty": "Easy|Medium|Hard",
+        "tags": ["Array", "String", "Dynamic Programming", etc.],
+        "companies": ["Google", "Amazon", "Microsoft", etc.],
+        "question": "Detailed question description",
+        "answer": "Detailed solution with explanation and code"
+      }
+      
+      Make sure to include a variety of questions with different difficulty levels and topics.`
+
+      const result = await chatSession.sendMessage(prompt)
+      const responseText = await result.response.text()
+
+      // Extract JSON from the response
+      const jsonMatch = responseText.match(/\[\s*\{.*\}\s*\]/s)
+      if (!jsonMatch) {
+        throw new Error("Could not extract valid JSON from the response")
+      }
+
+      const parsedQuestions = JSON.parse(jsonMatch[0])
+
+      if (!Array.isArray(parsedQuestions) || parsedQuestions.length === 0) {
+        throw new Error("Invalid question format received")
+      }
+
+      setTrendingQuestions(parsedQuestions)
+      setLastRefreshed(new Date())
+    } catch (err) {
+      console.error("Error generating trending questions:", err)
+      setTrendingError("Failed to generate trending questions. Please try again.")
+    } finally {
+      setLoadingTrending(false)
+    }
+  }
+
+  // Filter questions based on search query, difficulty, and company
+  const filterQuestions = (questions: Question[]) => {
+    return questions.filter((question: Question) => {
+      const matchesSearch =
+        searchQuery === "" ||
+        question.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        question.tags.some((tag: string) => tag.toLowerCase().includes(searchQuery.toLowerCase()))
+
+      const matchesDifficulty =
+        difficultyFilter === "all" || question.difficulty.toLowerCase() === difficultyFilter.toLowerCase()
+
+      const matchesCompany =
+        companyFilter === "all" ||
+        question.companies.some((comp: string) => comp.toLowerCase() === companyFilter.toLowerCase())
+
+      return matchesSearch && matchesDifficulty && matchesCompany
+    })
+  }
+
+  const formatRefreshTime = (date: Date) => {
+    return date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
+  }
+
+  const filteredLeetcodeQuestions = filterQuestions(leetcodeQuestions)
+  const filteredCodechefQuestions = filterQuestions(codechefQuestions)
+  const filteredGfgQuestions = filterQuestions(gfgQuestions)
+  const filteredTrendingQuestions = trendingQuestions.length > 0 ? filterQuestions(trendingQuestions) : []
 
   return (
     <DashboardLayout userType="student">
       <div className="space-y-6">
         <div>
           <h1 className="text-2xl font-bold tracking-tight">Coding Practice Questions</h1>
-          <p className="text-muted-foreground">Practice coding questions from popular platforms that are frequently asked in interviews.</p>
+          <p className="text-muted-foreground">
+            Practice coding questions from popular platforms that are frequently asked in interviews.
+          </p>
         </div>
 
         <div className="flex flex-col md:flex-row gap-4 items-start md:items-center justify-between">
@@ -161,24 +393,28 @@ export default function CodingQuestionsPage() {
               type="search"
               placeholder="Search questions..."
               className="w-full pl-8"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
           <div className="flex flex-col md:flex-row gap-2 w-full md:w-auto">
-            <Select>
+            <Select value={difficultyFilter} onValueChange={setDifficultyFilter}>
               <SelectTrigger className="w-full md:w-[180px]">
                 <SelectValue placeholder="Difficulty" />
               </SelectTrigger>
               <SelectContent>
+                <SelectItem value="all">All Difficulties</SelectItem>
                 <SelectItem value="easy">Easy</SelectItem>
                 <SelectItem value="medium">Medium</SelectItem>
                 <SelectItem value="hard">Hard</SelectItem>
               </SelectContent>
             </Select>
-            <Select>
+            <Select value={companyFilter} onValueChange={setCompanyFilter}>
               <SelectTrigger className="w-full md:w-[180px]">
                 <SelectValue placeholder="Company" />
               </SelectTrigger>
               <SelectContent>
+                <SelectItem value="all">All Companies</SelectItem>
                 <SelectItem value="amazon">Amazon</SelectItem>
                 <SelectItem value="google">Google</SelectItem>
                 <SelectItem value="microsoft">Microsoft</SelectItem>
@@ -188,6 +424,93 @@ export default function CodingQuestionsPage() {
             </Select>
           </div>
         </div>
+
+        {/* Trending Questions Section */}
+        <Card className="border-primary/20">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <TrendingUp className="h-5 w-5 text-primary" />
+              Trending Interview Questions
+            </CardTitle>
+            <CardDescription className="flex items-center justify-between">
+              <span>Real-time trending questions asked by top companies in 2024</span>
+              <div className="flex items-center gap-2">
+                <span className="text-xs flex items-center gap-1">
+                  <Clock className="h-3 w-3" />
+                  Last updated: {formatRefreshTime(lastRefreshed)}
+                </span>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={fetchTrendingQuestions}
+                  disabled={loadingTrending}
+                  className="h-7 px-2"
+                >
+                  {loadingTrending ? <Loader2 className="h-3 w-3 animate-spin" /> : <RefreshCw className="h-3 w-3" />}
+                </Button>
+              </div>
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            {loadingTrending ? (
+              <div className="flex flex-col items-center justify-center py-10">
+                <Loader2 className="h-10 w-10 animate-spin text-primary" />
+                <p className="mt-4 text-center text-muted-foreground">Fetching trending questions...</p>
+              </div>
+            ) : trendingError ? (
+              <div className="flex flex-col items-center justify-center py-10">
+                <p className="text-center text-red-500">{trendingError}</p>
+                <Button onClick={fetchTrendingQuestions} className="mt-4">
+                  Try Again
+                </Button>
+              </div>
+            ) : filteredTrendingQuestions.length === 0 ? (
+              <p className="text-center py-10 text-muted-foreground">
+                {trendingQuestions.length === 0
+                  ? "No trending questions available. Click refresh to fetch questions."
+                  : "No questions match your filters. Try adjusting your search criteria."}
+              </p>
+            ) : (
+              <div className="space-y-4">
+                {filteredTrendingQuestions.map((question) => (
+                  <div key={question.id} className="rounded-lg border p-4">
+                    <div className="flex items-start justify-between">
+                      <h3 className="font-medium">{question.title}</h3>
+                      <Badge
+                        className={`${question.difficulty.toLowerCase() === "easy" ? "bg-green-500" : question.difficulty.toLowerCase() === "medium" ? "bg-yellow-500" : "bg-red-500"}`}
+                      >
+                        {question.difficulty}
+                      </Badge>
+                    </div>
+                    <div className="mt-2 flex flex-wrap gap-2">
+                      {question.tags.map((tag, index) => (
+                        <Badge key={index} variant="outline" className="flex items-center gap-1">
+                          <Tag className="h-3 w-3" />
+                          {tag}
+                        </Badge>
+                      ))}
+                    </div>
+                    <div className="mt-2">
+                      <p className="text-sm">{question.question}</p>
+                    </div>
+                    <details className="mt-2">
+                      <summary className="cursor-pointer text-sm font-medium text-primary">View Solution</summary>
+                      <div className="mt-2 rounded-md bg-muted p-3">
+                        <pre className="text-xs whitespace-pre-wrap">{question.answer}</pre>
+                      </div>
+                    </details>
+                    <div className="mt-4 flex items-center justify-between">
+                      <div className="text-sm text-muted-foreground flex items-center gap-1">
+                        <Building className="h-3 w-3" />
+                        Companies: {question.companies.join(", ")}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </CardContent>
+        </Card>
 
         <Tabs defaultValue="leetcode">
           <TabsList className="grid w-full grid-cols-3">
@@ -206,35 +529,48 @@ export default function CodingQuestionsPage() {
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
-                  {leetcodeQuestions.map((question) => (
-                    <div key={question.id} className="rounded-lg border p-4">
-                      <div className="flex items-start justify-between">
-                        <h3 className="font-medium">{question.title}</h3>
-                        <Badge className={`${question.difficulty === 'Easy' ? 'bg-green-500' : question.difficulty === 'Medium' ? 'bg-yellow-500' : 'bg-red-500'}`}>
-                          {question.difficulty}
-                        </Badge>
-                      </div>
-                      <div className="mt-2 flex flex-wrap gap-2">
-                        {question.tags.map((tag, index) => (
-                          <Badge key={index} variant="outline" className="flex items-center gap-1">
-                            <Tag className="h-3 w-3" />
-                            {tag}
+                  {filteredLeetcodeQuestions.length === 0 ? (
+                    <p className="text-center py-10 text-muted-foreground">
+                      No questions match your filters. Try adjusting your search criteria.
+                    </p>
+                  ) : (
+                    filteredLeetcodeQuestions.map((question) => (
+                      <div key={question.id} className="rounded-lg border p-4">
+                        <div className="flex items-start justify-between">
+                          <h3 className="font-medium">{question.title}</h3>
+                          <Badge
+                            className={`${question.difficulty === "Easy" ? "bg-green-500" : question.difficulty === "Medium" ? "bg-yellow-500" : "bg-red-500"}`}
+                          >
+                            {question.difficulty}
                           </Badge>
-                        ))}
-                      </div>
-                      <div className="mt-4 flex items-center justify-between">
-                        <div className="text-sm text-muted-foreground">
-                          Companies: {question.companies.join(", ")}
                         </div>
-                        <Button size="sm" variant="outline" asChild>
-                          <a href={question.url} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1">
-                            <ExternalLink className="h-3 w-3" />
-                            Solve
-                          </a>
-                        </Button>
+                        <div className="mt-2 flex flex-wrap gap-2">
+                          {question.tags.map((tag, index) => (
+                            <Badge key={index} variant="outline" className="flex items-center gap-1">
+                              <Tag className="h-3 w-3" />
+                              {tag}
+                            </Badge>
+                          ))}
+                        </div>
+                        <div className="mt-4 flex items-center justify-between">
+                          <div className="text-sm text-muted-foreground">
+                            Companies: {question.companies.join(", ")}
+                          </div>
+                          <Button size="sm" variant="outline" asChild>
+                            <a
+                              href={question.url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="flex items-center gap-1"
+                            >
+                              <ExternalLink className="h-3 w-3" />
+                              Solve
+                            </a>
+                          </Button>
+                        </div>
                       </div>
-                    </div>
-                  ))}
+                    ))
+                  )}
                 </div>
               </CardContent>
             </Card>
@@ -250,35 +586,48 @@ export default function CodingQuestionsPage() {
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
-                  {codechefQuestions.map((question) => (
-                    <div key={question.id} className="rounded-lg border p-4">
-                      <div className="flex items-start justify-between">
-                        <h3 className="font-medium">{question.title}</h3>
-                        <Badge className={`${question.difficulty === 'Easy' ? 'bg-green-500' : question.difficulty === 'Medium' ? 'bg-yellow-500' : 'bg-red-500'}`}>
-                          {question.difficulty}
-                        </Badge>
-                      </div>
-                      <div className="mt-2 flex flex-wrap gap-2">
-                        {question.tags.map((tag, index) => (
-                          <Badge key={index} variant="outline" className="flex items-center gap-1">
-                            <Tag className="h-3 w-3" />
-                            {tag}
+                  {filteredCodechefQuestions.length === 0 ? (
+                    <p className="text-center py-10 text-muted-foreground">
+                      No questions match your filters. Try adjusting your search criteria.
+                    </p>
+                  ) : (
+                    filteredCodechefQuestions.map((question) => (
+                      <div key={question.id} className="rounded-lg border p-4">
+                        <div className="flex items-start justify-between">
+                          <h3 className="font-medium">{question.title}</h3>
+                          <Badge
+                            className={`${question.difficulty === "Easy" ? "bg-green-500" : question.difficulty === "Medium" ? "bg-yellow-500" : "bg-red-500"}`}
+                          >
+                            {question.difficulty}
                           </Badge>
-                        ))}
-                      </div>
-                      <div className="mt-4 flex items-center justify-between">
-                        <div className="text-sm text-muted-foreground">
-                          Companies: {question.companies.join(", ")}
                         </div>
-                        <Button size="sm" variant="outline" asChild>
-                          <a href={question.url} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1">
-                            <ExternalLink className="h-3 w-3" />
-                            Solve
-                          </a>
-                        </Button>
+                        <div className="mt-2 flex flex-wrap gap-2">
+                          {question.tags.map((tag, index) => (
+                            <Badge key={index} variant="outline" className="flex items-center gap-1">
+                              <Tag className="h-3 w-3" />
+                              {tag}
+                            </Badge>
+                          ))}
+                        </div>
+                        <div className="mt-4 flex items-center justify-between">
+                          <div className="text-sm text-muted-foreground">
+                            Companies: {question.companies.join(", ")}
+                          </div>
+                          <Button size="sm" variant="outline" asChild>
+                            <a
+                              href={question.url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="flex items-center gap-1"
+                            >
+                              <ExternalLink className="h-3 w-3" />
+                              Solve
+                            </a>
+                          </Button>
+                        </div>
                       </div>
-                    </div>
-                  ))}
+                    ))
+                  )}
                 </div>
               </CardContent>
             </Card>
@@ -294,35 +643,48 @@ export default function CodingQuestionsPage() {
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
-                  {gfgQuestions.map((question) => (
-                    <div key={question.id} className="rounded-lg border p-4">
-                      <div className="flex items-start justify-between">
-                        <h3 className="font-medium">{question.title}</h3>
-                        <Badge className={`${question.difficulty === 'Easy' ? 'bg-green-500' : question.difficulty === 'Medium' ? 'bg-yellow-500' : 'bg-red-500'}`}>
-                          {question.difficulty}
-                        </Badge>
-                      </div>
-                      <div className="mt-2 flex flex-wrap gap-2">
-                        {question.tags.map((tag, index) => (
-                          <Badge key={index} variant="outline" className="flex items-center gap-1">
-                            <Tag className="h-3 w-3" />
-                            {tag}
+                  {filteredGfgQuestions.length === 0 ? (
+                    <p className="text-center py-10 text-muted-foreground">
+                      No questions match your filters. Try adjusting your search criteria.
+                    </p>
+                  ) : (
+                    filteredGfgQuestions.map((question) => (
+                      <div key={question.id} className="rounded-lg border p-4">
+                        <div className="flex items-start justify-between">
+                          <h3 className="font-medium">{question.title}</h3>
+                          <Badge
+                            className={`${question.difficulty === "Easy" ? "bg-green-500" : question.difficulty === "Medium" ? "bg-yellow-500" : "bg-red-500"}`}
+                          >
+                            {question.difficulty}
                           </Badge>
-                        ))}
-                      </div>
-                      <div className="mt-4 flex items-center justify-between">
-                        <div className="text-sm text-muted-foreground">
-                          Companies: {question.companies.join(", ")}
                         </div>
-                        <Button size="sm" variant="outline" asChild>
-                          <a href={question.url} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1">
-                            <ExternalLink className="h-3 w-3" />
-                            Solve
-                          </a>
-                        </Button>
+                        <div className="mt-2 flex flex-wrap gap-2">
+                          {question.tags.map((tag, index) => (
+                            <Badge key={index} variant="outline" className="flex items-center gap-1">
+                              <Tag className="h-3 w-3" />
+                              {tag}
+                            </Badge>
+                          ))}
+                        </div>
+                        <div className="mt-4 flex items-center justify-between">
+                          <div className="text-sm text-muted-foreground">
+                            Companies: {question.companies.join(", ")}
+                          </div>
+                          <Button size="sm" variant="outline" asChild>
+                            <a
+                              href={question.url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="flex items-center gap-1"
+                            >
+                              <ExternalLink className="h-3 w-3" />
+                              Solve
+                            </a>
+                          </Button>
+                        </div>
                       </div>
-                    </div>
-                  ))}
+                    ))
+                  )}
                 </div>
               </CardContent>
             </Card>
@@ -339,7 +701,8 @@ export default function CodingQuestionsPage() {
               <div className="rounded-lg border p-4">
                 <h3 className="font-medium">1. Master Data Structures and Algorithms</h3>
                 <p className="text-sm text-muted-foreground mt-1">
-                  Focus on arrays, linked lists, stacks, queues, trees, graphs, and algorithms like sorting, searching, and dynamic programming.
+                  Focus on arrays, linked lists, stacks, queues, trees, graphs, and algorithms like sorting, searching,
+                  and dynamic programming.
                 </p>
               </div>
               <div className="rounded-lg border p-4">

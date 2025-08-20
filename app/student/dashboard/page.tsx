@@ -23,8 +23,8 @@ export default function StudentDashboard() {
   ]
 
   const performanceStats = {
-    leetcode: { solved: 120, total: 2000, rank: 15243 },
-    codechef: { rating: 1823, contests: 12, highestRank: 342 },
+    leetcode: { solved: 191, total: 2000, rank: 15243 },
+    codechef: { rating: 1096, contests:2, GlobalRank: 115881 },
     gfg: { solved: 85, score: 350 },
     codingNinjas: { points: 1250, rank: "Knight" },
   }
@@ -106,7 +106,7 @@ export default function StudentDashboard() {
                 </div>
                 <div className="flex justify-between text-xs">
                   <span className="text-muted-foreground">Highest Rank</span>
-                  <span className="font-medium">#{performanceStats.codechef.highestRank}</span>
+                  <span className="font-medium">#{performanceStats.codechef.GlobalRank}</span>
                 </div>
               </div>
             </CardContent>

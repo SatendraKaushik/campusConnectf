@@ -2,7 +2,7 @@
 
 import type React from "react"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import DashboardLayout from "@/components/dashboard-layout"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
@@ -16,15 +16,260 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Separator } from "@/components/ui/separator"
 import { AlertCircle, Bell, Camera, Check, Lock, Save, User } from "lucide-react"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
+import { toast } from "sonner"
+import Axios from "@/utils/Axios"
+
+interface UserSettings {
+  profile: {
+    firstName: string;
+    lastName: string;
+    email: string;
+    bio: string;
+    location: string;
+    phone: string;
+    website: string;
+    avatar?: string;
+    socialLinks: {
+      github: string;
+      linkedin: string;
+      twitter: string;
+    };
+  };
+  account: {
+    language: string;
+    timezone: string;
+    twoFactorEnabled: boolean;
+  };
+  notifications: {
+    email: {
+      newMessages: boolean;
+      connectionRequests: boolean;
+      mentorSessions: boolean;
+      collegeAnnouncements: boolean;
+    };
+    push: {
+      enabled: boolean;
+      newMessages: boolean;
+      connectionRequests: boolean;
+    };
+    emailDigestFrequency: string;
+  };
+}
 
 export default function SettingsPage() {
   const [saveSuccess, setSaveSuccess] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
+  
+  // Define default settings
+  const defaultSettings: UserSettings = {
+    profile: {
+      firstName: '',
+      lastName: '',
+      email: '',
+      bio: '',
+      location: '',
+      phone: '',
+      website: '',
+      avatar: '',
+      socialLinks: {
+        github: '',
+        linkedin: '',
+        twitter: ''
+      }
+    },
+    account: {
+      language: 'en',
+      timezone: 'ist',
+      twoFactorEnabled: false
+    },
+    notifications: {
+      email: {
+        newMessages: true,
+        connectionRequests: true,
+        mentorSessions: true,
+        collegeAnnouncements: true
+      },
+      push: {
+        enabled: true,
+        newMessages: true,
+        connectionRequests: true
+      },
+      emailDigestFrequency: 'daily'
+    }
+  }
 
-  const handleSave = (e: React.FormEvent) => {
+  const [settings, setSettings] = useState<UserSettings>(() => {
+    try {
+      if (typeof window === 'undefined') return defaultSettings
+      
+      const savedSettings = localStorage.getItem('userSettings')
+      if (!savedSettings) return defaultSettings
+
+      const parsedSettings = JSON.parse(savedSettings)
+      return parsedSettings || defaultSettings
+    } catch (error) {
+      console.error('Error loading settings:', error)
+      return defaultSettings
+    }
+  })
+
+  useEffect(() => {
+    fetchSettings()
+  }, [])
+
+  const fetchSettings = async () => {
+    try {
+      const userData = JSON.parse(localStorage.getItem('user') || '{}')
+      const userId = userData?._id
+      
+      if (!userId) {
+        toast.error('User information not found')
+        return
+      }
+  
+      const response = await Axios.get('/student-data', {
+        params: { userId }
+      })
+  
+      if (response.data.success) {
+        setSettings(response.data.data)
+        localStorage.setItem('userSettings', JSON.stringify(response.data.data))
+      }
+    } catch (error) {
+      console.error('Error fetching settings:', error)
+      toast.error('Failed to load settings')
+    }
+  }
+  
+  const handleSave = async (e: React.FormEvent) => {
     e.preventDefault()
-    // In a real app, you would save the form data to your backend
-    setSaveSuccess(true)
-    setTimeout(() => setSaveSuccess(false), 3000)
+    setIsLoading(true)
+  
+    try {
+      const userData = JSON.parse(localStorage.getItem('user') || '{}');
+      const userId = userData?._id;
+      
+      if (!userId) {
+        toast.error('User information not found');
+        setIsLoading(false);
+        return;
+      }
+      
+      // Map the settings to match the Student model structure
+      const updateData = {
+        userId,
+        profile: {
+          firstName: settings.profile.firstName,
+          lastName: settings.profile.lastName,
+          email: settings.profile.email,
+          bio: settings.profile.bio,
+          location: settings.profile.location,
+          phone: settings.profile.phone,
+          website: settings.profile.website,
+          avatar: settings.profile.avatar,
+          socialLinks: {
+            github: settings.profile.socialLinks.github,
+            linkedin: settings.profile.socialLinks.linkedin,
+            twitter: settings.profile.socialLinks.twitter
+          }
+        },
+        account: {
+          language: settings.account.language,
+          timezone: settings.account.timezone,
+          twoFactorEnabled: settings.account.twoFactorEnabled
+        },
+        notifications: {
+          email: {
+            newMessages: settings.notifications.email.newMessages,
+            connectionRequests: settings.notifications.email.connectionRequests,
+            mentorSessions: settings.notifications.email.mentorSessions,
+            collegeAnnouncements: settings.notifications.email.collegeAnnouncements
+          },
+          push: {
+            enabled: settings.notifications.push.enabled,
+            newMessages: settings.notifications.push.newMessages,
+            connectionRequests: settings.notifications.push.connectionRequests
+          },
+          emailDigestFrequency: settings.notifications.emailDigestFrequency
+        }
+      
+      };
+      
+      const response = await Axios.put('/profile', updateData);
+      
+      if (response.data.success) {
+        setSaveSuccess(true)
+        // Update both localStorage items
+        localStorage.setItem('userSettings', JSON.stringify(response.data.data))
+        localStorage.setItem('user', JSON.stringify({
+          ...userData,
+          ...response.data.data
+        }))
+        toast.success('Settings saved successfully')
+        setTimeout(() => setSaveSuccess(false), 3000)
+      }
+    } catch (error) {
+      console.error('Error saving settings:', error)
+      toast.error('Failed to save settings')
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  const handleProfileChange = (field: string, value: string) => {
+    setSettings(prev => ({
+      ...prev,
+      profile: {
+        ...prev.profile,
+        [field]: value
+      }
+    }))
+  }
+
+  const handleSocialLinkChange = (platform: string, value: string) => {
+    setSettings(prev => ({
+      ...prev,
+      profile: {
+        ...prev.profile,
+        socialLinks: {
+          ...prev.profile.socialLinks,
+          [platform]: value
+        }
+      }
+    }))
+  }
+
+  const handleNotificationChange = (type: string, field: string, value: boolean) => {
+    setSettings(prev => ({
+      ...prev,
+      notifications: {
+        ...prev.notifications,
+        [type]: {
+          ...prev.notifications[type],
+          [field]: value
+        }
+      }
+    }))
+  }
+
+  const handleAccountChange = (field: string, value: string | boolean) => {
+    setSettings(prev => ({
+      ...prev,
+      account: {
+        ...prev.account,
+        [field]: value
+      }
+    }))
+  }
+
+  const handleEmailDigestChange = (value: string) => {
+    setSettings(prev => ({
+      ...prev,
+      notifications: {
+        ...prev.notifications,
+        emailDigestFrequency: value
+      }
+    }))
   }
 
   return (
@@ -97,17 +342,33 @@ export default function SettingsPage() {
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div className="space-y-2">
                           <Label htmlFor="first-name">First Name</Label>
-                          <Input id="first-name" defaultValue="Alex" />
+                          <Input
+                            id="first-name"
+                            value={settings?.profile?.firstName || ''}
+                            onChange={(e) => handleProfileChange('firstName', e.target.value)}
+                            disabled={isLoading}
+                          />
                         </div>
                         <div className="space-y-2">
                           <Label htmlFor="last-name">Last Name</Label>
-                          <Input id="last-name" defaultValue="Johnson" />
+                          <Input
+                            id="last-name"
+                            value={settings?.profile?.lastName || ''}
+                            onChange={(e) => handleProfileChange('lastName', e.target.value)}
+                            disabled={isLoading}
+                          />
                         </div>
                       </div>
 
                       <div className="space-y-2">
                         <Label htmlFor="email">Email</Label>
-                        <Input id="email" type="email" defaultValue="alex.johnson@example.com" />
+                        <Input
+                          id="email"
+                          type="email"
+                          value={settings?.profile?.email || ''}
+                          onChange={(e) => handleProfileChange('email', e.target.value)}
+                          disabled={isLoading}
+                        />
                       </div>
 
                       <div className="space-y-2">
@@ -115,24 +376,41 @@ export default function SettingsPage() {
                         <Textarea
                           id="bio"
                           rows={4}
-                          defaultValue="Passionate computer science student with interests in web development, machine learning, and competitive programming. Looking to connect with like-minded individuals and mentors."
+                          value={settings?.profile?.bio || ''}
+                          onChange={(e) => handleProfileChange('bio', e.target.value)}
+                          disabled={isLoading}
                         />
                       </div>
 
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div className="space-y-2">
                           <Label htmlFor="location">Location</Label>
-                          <Input id="location" defaultValue="New Delhi, India" />
+                          <Input
+                            id="location"
+                            value={settings?.profile?.location || ''}
+                            onChange={(e) => handleProfileChange('location', e.target.value)}
+                            disabled={isLoading}
+                          />
                         </div>
                         <div className="space-y-2">
                           <Label htmlFor="phone">Phone</Label>
-                          <Input id="phone" defaultValue="+91 9876543210" />
+                          <Input
+                            id="phone"
+                            value={settings?.profile?.phone || ''}
+                            onChange={(e) => handleProfileChange('phone', e.target.value)}
+                            disabled={isLoading}
+                          />
                         </div>
                       </div>
 
                       <div className="space-y-2">
                         <Label htmlFor="website">Website</Label>
-                        <Input id="website" defaultValue="https://alexjohnson.dev" />
+                        <Input
+                          id="website"
+                          value={settings?.profile?.website || ''}
+                          onChange={(e) => handleProfileChange('website', e.target.value)}
+                          disabled={isLoading}
+                        />
                       </div>
 
                       <div className="space-y-2">
@@ -142,26 +420,41 @@ export default function SettingsPage() {
                             <Label htmlFor="github" className="text-xs">
                               GitHub
                             </Label>
-                            <Input id="github" defaultValue="https://github.com/alexjohnson" />
+                            <Input
+                              id="github"
+                              value={settings?.profile?.socialLinks?.github || ''}
+                              onChange={(e) => handleSocialLinkChange('github', e.target.value)}
+                              disabled={isLoading}
+                            />
                           </div>
                           <div className="space-y-2">
                             <Label htmlFor="linkedin" className="text-xs">
                               LinkedIn
                             </Label>
-                            <Input id="linkedin" defaultValue="https://linkedin.com/in/alexjohnson" />
+                            <Input
+                              id="linkedin"
+                              value={settings?.profile?.socialLinks?.linkedin || ''}
+                              onChange={(e) => handleSocialLinkChange('linkedin', e.target.value)}
+                              disabled={isLoading}
+                            />
                           </div>
                           <div className="space-y-2">
                             <Label htmlFor="twitter" className="text-xs">
                               Twitter
                             </Label>
-                            <Input id="twitter" defaultValue="https://twitter.com/alexjohnson" />
+                            <Input
+                              id="twitter"
+                              value={settings?.profile?.socialLinks?.twitter || ''}
+                              onChange={(e) => handleSocialLinkChange('twitter', e.target.value)}
+                              disabled={isLoading}
+                            />
                           </div>
                         </div>
                       </div>
 
-                      <Button type="submit">
+                      <Button type="submit" disabled={isLoading}>
                         <Save className="mr-2 h-4 w-4" />
-                        Save Changes
+                        {isLoading ? 'Saving...' : 'Save Changes'}
                       </Button>
                     </form>
                   </CardContent>
@@ -205,7 +498,11 @@ export default function SettingsPage() {
                             Add an extra layer of security to your account
                           </p>
                         </div>
-                        <Switch />
+                        <Switch
+                          checked={settings?.account?.twoFactorEnabled || false}
+                          onCheckedChange={(checked) => handleAccountChange('twoFactorEnabled', checked)}
+                          disabled={isLoading}
+                        />
                       </div>
                     </div>
 
@@ -216,7 +513,11 @@ export default function SettingsPage() {
                       <div className="space-y-4">
                         <div className="space-y-2">
                           <Label htmlFor="language">Language</Label>
-                          <Select defaultValue="en">
+                          <Select 
+                            value={settings?.account?.language || 'en'}
+                            onValueChange={(value) => handleAccountChange('language', value)}
+                            disabled={isLoading}
+                          >
                             <SelectTrigger id="language">
                               <SelectValue placeholder="Select language" />
                             </SelectTrigger>
@@ -230,7 +531,11 @@ export default function SettingsPage() {
                         </div>
                         <div className="space-y-2">
                           <Label htmlFor="timezone">Timezone</Label>
-                          <Select defaultValue="ist">
+                          <Select 
+                            value={settings?.account?.timezone || 'ist'}
+                            onValueChange={(value) => handleAccountChange('timezone', value)}
+                            disabled={isLoading}
+                          >
                             <SelectTrigger id="timezone">
                               <SelectValue placeholder="Select timezone" />
                             </SelectTrigger>
@@ -280,7 +585,11 @@ export default function SettingsPage() {
                               Receive email notifications for new messages
                             </p>
                           </div>
-                          <Switch defaultChecked />
+                          <Switch 
+                            checked={settings?.notifications?.email?.newMessages || false}
+                            onCheckedChange={(checked) => handleNotificationChange('email', 'newMessages', checked)}
+                            disabled={isLoading}
+                          />
                         </div>
                         <div className="flex items-center justify-between">
                           <div>
@@ -289,7 +598,11 @@ export default function SettingsPage() {
                               Receive email notifications for new connection requests
                             </p>
                           </div>
-                          <Switch defaultChecked />
+                          <Switch 
+                            checked={settings?.notifications?.email?.connectionRequests || false}
+                            onCheckedChange={(checked) => handleNotificationChange('email', 'connectionRequests', checked)}
+                            disabled={isLoading}
+                          />
                         </div>
                         <div className="flex items-center justify-between">
                           <div>
@@ -298,7 +611,11 @@ export default function SettingsPage() {
                               Receive email notifications for upcoming mentor sessions
                             </p>
                           </div>
-                          <Switch defaultChecked />
+                          <Switch 
+                            checked={settings?.notifications?.email?.mentorSessions || false}
+                            onCheckedChange={(checked) => handleNotificationChange('email', 'mentorSessions', checked)}
+                            disabled={isLoading}
+                          />
                         </div>
                         <div className="flex items-center justify-between">
                           <div>
@@ -307,7 +624,11 @@ export default function SettingsPage() {
                               Receive email notifications for college announcements
                             </p>
                           </div>
-                          <Switch defaultChecked />
+                          <Switch 
+                            checked={settings?.notifications?.email?.collegeAnnouncements || false}
+                            onCheckedChange={(checked) => handleNotificationChange('email', 'collegeAnnouncements', checked)}
+                            disabled={isLoading}
+                          />
                         </div>
                       </div>
                     </div>
@@ -322,14 +643,22 @@ export default function SettingsPage() {
                             <p className="font-medium">Enable Push Notifications</p>
                             <p className="text-sm text-muted-foreground">Receive notifications on your device</p>
                           </div>
-                          <Switch defaultChecked />
+                          <Switch 
+                            checked={settings?.notifications?.push?.enabled || false}
+                            onCheckedChange={(checked) => handleNotificationChange('push', 'enabled', checked)}
+                            disabled={isLoading}
+                          />
                         </div>
                         <div className="flex items-center justify-between">
                           <div>
                             <p className="font-medium">New Messages</p>
                             <p className="text-sm text-muted-foreground">Receive push notifications for new messages</p>
                           </div>
-                          <Switch defaultChecked />
+                          <Switch 
+                            checked={settings?.notifications?.push?.newMessages || false}
+                            onCheckedChange={(checked) => handleNotificationChange('push', 'newMessages', checked)}
+                            disabled={isLoading}
+                          />
                         </div>
                         <div className="flex items-center justify-between">
                           <div>
@@ -338,7 +667,11 @@ export default function SettingsPage() {
                               Receive push notifications for new connection requests
                             </p>
                           </div>
-                          <Switch defaultChecked />
+                          <Switch 
+                            checked={settings?.notifications?.push?.connectionRequests || false}
+                            onCheckedChange={(checked) => handleNotificationChange('push', 'connectionRequests', checked)}
+                            disabled={isLoading}
+                          />
                         </div>
                       </div>
                     </div>
@@ -349,7 +682,11 @@ export default function SettingsPage() {
                       <h3 className="text-lg font-medium">Notification Frequency</h3>
                       <div className="space-y-2">
                         <Label htmlFor="frequency">Email Digest Frequency</Label>
-                        <Select defaultValue="daily">
+                        <Select 
+                          value={settings?.notifications?.emailDigestFrequency || 'daily'}
+                          onValueChange={handleEmailDigestChange}
+                          disabled={isLoading}
+                        >
                           <SelectTrigger id="frequency">
                             <SelectValue placeholder="Select frequency" />
                           </SelectTrigger>
@@ -363,7 +700,10 @@ export default function SettingsPage() {
                       </div>
                     </div>
 
-                    <Button>Save Notification Settings</Button>
+                    <Button onClick={handleSave} disabled={isLoading}>
+                      <Save className="mr-2 h-4 w-4" />
+                      {isLoading ? 'Saving...' : 'Save Notification Settings'}
+                    </Button>
                   </CardContent>
                 </Card>
               </TabsContent>
@@ -374,4 +714,3 @@ export default function SettingsPage() {
     </DashboardLayout>
   )
 }
-

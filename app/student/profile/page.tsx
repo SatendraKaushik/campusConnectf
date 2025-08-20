@@ -1,3 +1,4 @@
+"use client"
 import DashboardLayout from "@/components/dashboard-layout"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
@@ -8,10 +9,11 @@ import { Progress } from "@/components/ui/progress"
 import { Separator } from "@/components/ui/separator"
 import { Edit, Github, Linkedin, Mail, MapPin, Phone, Twitter, Trophy } from "lucide-react"
 import Link from "next/link"
+import { useEffect, useState } from "react"
 
 export default function ProfilePage() {
-  // Hardcoded data for demonstration
-  const profileData = {
+  // Default hardcoded data as fallback
+  const defaultProfileData = {
     name: "Alex Johnson",
     avatar: "/placeholder.svg?height=200&width=200",
     role: "Student",
@@ -89,6 +91,45 @@ export default function ProfilePage() {
       codingNinjas: { points: 1250, rank: "Knight" },
     },
   }
+
+  // State to hold profile data
+  const [profileData, setProfileData] = useState(defaultProfileData)
+
+  // Load data from localStorage on component mount
+  useEffect(() => {
+    // Function to safely get data from localStorage
+    const getLocalStorageData = () => {
+      try {
+        const userData = localStorage.getItem('user')
+        if (userData) {
+          const parsedUserData = JSON.parse(userData)
+          
+          // Create a merged profile data object that combines localStorage data with default values
+          // for fields that may not exist in localStorage
+          const mergedProfileData = {
+            ...defaultProfileData,
+            // Override with available localStorage data
+            name: `${parsedUserData.firstName || ''} ${parsedUserData.lastName || ''}`.trim() || defaultProfileData.name,
+            avatar: parsedUserData.avatar || defaultProfileData.avatar,
+            role: parsedUserData.role || defaultProfileData.role,
+            branch: parsedUserData.branch || defaultProfileData.branch,
+            batch: parsedUserData.joiningYear ? 
+              `${parsedUserData.joiningYear}-${parseInt(parsedUserData.joiningYear) + 4}` : 
+              defaultProfileData.batch,
+            email: parsedUserData.email || defaultProfileData.email,
+            // Keep other fields from defaultProfileData if not available in localStorage
+          }
+          
+          setProfileData(mergedProfileData)
+        }
+      } catch (error) {
+        console.error("Error loading user data from localStorage:", error)
+        // Keep default data if there's an error
+      }
+    }
+
+    getLocalStorageData()
+  }, []) // Empty dependency array means this runs once on component mount
 
   return (
     <DashboardLayout userType="student">
@@ -431,4 +472,3 @@ export default function ProfilePage() {
     </DashboardLayout>
   )
 }
-

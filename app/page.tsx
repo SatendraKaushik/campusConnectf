@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button"
+import { QuickStartModal } from "@/components/quick-start-modal"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import Link from "next/link"
 import Image from "next/image"
@@ -41,6 +42,7 @@ export default function Home() {
           <Button asChild>
             <Link href="/login">Login</Link>
           </Button>
+         
         </div>
       </header>
 
@@ -68,11 +70,12 @@ export default function Home() {
                 A comprehensive platform designed to enhance student experience, facilitate mentorship, and streamline
                 academic management.
               </p>
-              <div className="flex gap-4">
+              <div className="flex gap-4 flex-wrap">
                 <Button size="lg" className="bg-white text-primary hover:bg-gray-100" asChild>
                   <Link href="/login">Get Started</Link>
                 </Button>
-                <Button size="lg" variant="outline" className="bg-white text-primary hover:bg-gray-100 " asChild>
+                <QuickStartModal />
+                <Button size="lg" variant="outline" className="bg-white text-primary hover:bg-gray-100" asChild>
                   <Link href="/features">Learn More</Link>
                 </Button>
               </div>

@@ -1,7 +1,5 @@
 "use client"
 
-import type React from "react"
-
 import { useState, useEffect } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
@@ -67,6 +65,7 @@ export default function DashboardLayout({ children, userType }: DashboardLayoutP
     { title: "Messages", href: "/student/messages", icon: MessageSquare },
     { title: "Academic Records", href: "/student/academic-records", icon: BookOpen },
     { title: "Practice", href: "/student/practice", icon: BookOpen },
+    { title: "RoadMap", href: "/student/roadMap", icon: BookOpen },
   ]
 
   const adminNavItems: NavItem[] = [
